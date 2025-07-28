@@ -15,3 +15,32 @@ $totalQty = $cart->getTotalQtyByUserId();
 $order = new order();
 $result = $order->getOrderByUser();
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <!-- Cho phép tương thích với IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Đảm bảo trang hiển thị tốt trên mọi thiết bị -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link CSS riêng của bạn -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Các thư viện icon từ Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://use.fontawesome.com/2145adbb48.js"></script>
+    <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
+
+    <!-- Tiêu đề trang -->
+    <title>Checkout</title>
+
+    <!-- Thư viện jQuery để dùng cho slide ảnh -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+</head>
+<body>
+    
+</body>
+</html>

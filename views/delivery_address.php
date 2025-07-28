@@ -48,9 +48,38 @@ $result = $order->getOrderByUser();
             }, 5000);
         });
     </script>
-    
+
 </head>
 <body>
-    
+<!-- Thanh điều hướng -->
+<nav>
+    <label class="logo"><a href="index.php">IVY Moda</a></label>
+    <ul>
+        <li><a href="index.php">Trang chủ</a></li>
+        <li><a href="productList.php">Sản phẩm</a></li>
+        <li><a href="order.php" id="order">Đơn hàng</a></li>
+
+        <!-- Giỏ hàng với số lượng hiển thị -->
+        <li>
+            <a href="checkout.php">
+                Giỏ hàng
+                <i class="fa fa-shopping-bag"></i>
+                <sup class="sumItem">
+                    <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
+                </sup>
+            </a>
+        </li>
+
+        <!-- Hiển thị đăng nhập / đăng ký hoặc thông tin cá nhân / đăng xuất tùy theo trạng thái -->
+        <?php
+        if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+            <li><a href="info.php" id="signin">Thông tin cá nhân</a></li>
+            <li><a href="logout.php" id="signin">Đăng xuất</a></li>
+        <?php } else { ?>
+            <li><a href="register.php" id="signup">Đăng ký</a></li>
+            <li><a href="login.php" id="signin">Đăng nhập</a></li>
+        <?php } ?>
+    </ul>
+</nav>
 </body>
 </html>

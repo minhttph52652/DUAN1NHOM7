@@ -39,6 +39,16 @@ $result = $order->getOrderByUser();
     <!-- Thư viện jQuery để dùng cho slide ảnh -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
+        <script>
+        // Slide hình ảnh tự động mỗi 5 giây
+        $(function() {
+            $('.fadein img:gt(0)').hide();
+            setInterval(function() {
+                $('.fadein :first-child').fadeOut().next('img').fadeIn().end().appendTo('.fadein');
+            }, 5000);
+        });
+    </script>
+    
 </head>
 <body>
     

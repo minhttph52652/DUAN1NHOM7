@@ -122,4 +122,19 @@ $result = $order->getOrderByUser();
 </footer>
 
 </body>
+
+<!-- Script kiểm tra số điện thoại -->
+<script>
+function validatePhoneNumber(input) {
+    var phoneNumber = input.value;
+    var regex = /^[0-9]{10}$/; // Regex kiểm tra số điện thoại 10 chữ số
+
+    if (!regex.test(phoneNumber)) {
+        input.setCustomValidity('Số điện thoại không đúng định dạng!');
+    } else {
+        input.setCustomValidity('');
+    }
+}
+</script>
+
 </html>

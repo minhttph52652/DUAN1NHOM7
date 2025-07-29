@@ -168,3 +168,24 @@ $userInfo = $user->get(); // Lấy thông tin người dùng đang đăng nhập
         <h3>Giỏ hàng hiện đang rỗng</h3>
     <?php } ?>
 </div>
+
+
+    <!-- Phần footer -->
+<footer>
+    <!-- Các icon mạng xã hội -->
+    <div class="social">
+        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+    </div>
+
+    <!-- Các liên kết -->
+    <ul class="list">
+        <li><a href="./">Trang Chủ</a></li>
+        <li><a href="productList.php">Sản Phẩm</a></li>
+    </ul>
+
+    <!-- Bản quyền -->
+    <p class="copyright">copy by IVYmoda.com 2024</p>
+</footer>
+</body>

@@ -143,3 +143,28 @@ $userInfo = $user->get(); // Lấy thông tin người dùng đang đăng nhập
             <?php } ?>
         </table>
         </div>
+        
+                    <!-- Thông tin đơn hàng bên phải -->
+        <div class="orderinfo">
+            <div class="buy">
+                <h3>Thông tin đơn đặt hàng</h3>
+                <!-- Tên người đặt hàng -->
+                <div>Người đặt hàng: <b><?= $userInfo['fullname'] ?></b></div>
+                <!-- Tổng số lượng sản phẩm -->
+                <div>Số lượng: <b id="qtycart"><?= $totalQty['total'] ?></b></div>
+                <!-- Tổng giá trị đơn hàng -->
+                <div>Tổng tiền: <b id="totalcart"><?= number_format($totalPrice['total'], 0, '', ',') ?>VND</b></div>
+                <!-- Địa chỉ nhận hàng -->
+                <div>Địa chỉ nhận hàng: <b><?= $userInfo['address'] ?></b></div>
+                
+                <!-- Nút tiến hành đặt hàng -->
+                <div class="buy-btn">
+                    <a href="check_cart.php?status=<?= $userInfo['status'] ?>&userId=<?= $userInfo['id'] ?>">Tiến hành đặt hàng</a>
+                </div>
+            </div>
+        </div>
+    <?php } else { ?>
+        <!-- Nếu giỏ rỗng thì thông báo -->
+        <h3>Giỏ hàng hiện đang rỗng</h3>
+    <?php } ?>
+</div>

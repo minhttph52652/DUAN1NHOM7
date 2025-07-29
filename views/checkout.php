@@ -189,3 +189,91 @@ $userInfo = $user->get(); // Lấy thông tin người dùng đang đăng nhập
     <p class="copyright">copy by IVYmoda.com 2024</p>
 </footer>
 </body>
+
+<script type="text/javascript">
+    // Hàm cập nhật giỏ hàng khi người dùng thay đổi số lượng sản phẩm
+    function update(e) {
+        // Tạo đối tượng XMLHttpRequest để gửi request đến server
+        var http = new XMLHttpRequest();
+
+        // URL của file xử lý cập nhật giỏ hàng
+        var url = 'update_cart.php';
+
+        // Tạo chuỗi tham số cần gửi: gồm id sản phẩm và số lượng mới
+        var params = "productId=" + e.id + "&qty=" + e.value;
+
+        // Mở kết nối theo phương thức POST
+        http.open('POST', url, true);
+
+        // Thiết lập header để gửi dữ liệu dưới dạng form (x-www-form-urlencoded)
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        // Gọi hàm khi có sự thay đổi trạng thái của request
+        http.onreadystatechange = function () {
+            // Khi request hoàn tất
+            if (http.readyState === XMLHttpRequest.DONE) {
+                var status = http.status;
+
+                // Nếu status là 200 (thành công)
+                if (status === 200) {
+                    var arr = http.responseText;
+                    var b = false;
+                    var result = "";
+
+                    // Lấy ra phần JSON từ chuỗi phản hồi (cắt bỏ phần không cần thiết)
+                    for (let index = 0; index < arr.length; index++) {
+                        if (arr[index] == "[") {
+                            b = true;
+                        }
+                        if (b) {
+                            result += arr[index];
+                        }
+                    }
+
+                    // Parse chuỗi JSON thành mảng object
+                    var arrResult = JSON.parse(result.replace("undefined", ""));
+
+                    console.log(arrResult); // Debug ra console để xem kết quả
+
+                    // Cập nhật tổng số lượng sản phẩm ở phần header
+                    document.getElementById("totalQtyHeader").innerHTML = arrResult[1]['total'];
+
+                    // Cập nhật tổng số lượng trong phần thông tin đơn hàng
+                    document.getElementById("qtycart").innerHTML = arrResult[1]['total'];
+
+                    // Cập nhật tổng tiền, định dạng lại số tiền có dấu phẩy
+                    document.getElementById("totalcart").innerHTML = arrResult[0]['total'].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + "VND";
+
+                    // Có thể mở alert thông báo cập nhật thành công nếu muốn
+                    // alert('Đã cập nhật giỏ hàng!');
+                }
+
+                // Nếu status 501: lỗi do vượt quá số lượng tồn kho
+                else if (status === 501) {
+                    alert('Số lượng sản phẩm không đủ để thêm vào giỏ hàng!');
+                    // Trừ đi 1 đơn vị để khớp với số tối đa có thể
+                    e.value = parseInt(e.value) - 1;
+                }
+
+                // Các lỗi khác
+                else {
+                    alert('Cập nhật giỏ hàng thất bại!');
+                    // Tải lại trang
+                    window.location.reload();
+                }
+            }
+        }
+
+        // Gửi request với tham số đã chuẩn bị
+        http.send(params);
+    }
+
+    // Cấm người dùng nhập số lượng bằng bàn phím, chỉ được bấm nút tăng/giảm
+    var list = document.getElementsByClassName("qty");
+    for (let item of list) {
+        item.addEventListener("keypress", function (evt) {
+            evt.preventDefault(); // Ngăn không cho gõ bàn phím vào ô số lượng
+        });
+    }
+</script>
+</html>    

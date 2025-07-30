@@ -81,5 +81,60 @@ $result = $order->getOrderByUser();
         <?php } ?>
     </ul>
 </nav>
+
+<!-- Phần hiển thị địa chỉ giao hàng -->
+<div class="deliveryContainer">
+    <div class="nhanHang">
+        <h1>Địa chỉ nhận hàng</h1>
+    </div>
+
+    <div class="container-single">
+        <div class="infor_man">
+            <!-- Form nhập thông tin người nhận -->
+            <form action="add_order.php" method="post" class="form-login">
+                <label for="fullName">Họ tên người nhận</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Họ tên..." required>
+
+                <label for="numberPhone">Số điện thoại</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại..." required oninput="validatePhoneNumber(this)">
+                
+                <label for="address">Địa chỉ</label>
+                <textarea name="address" id="address" cols="30" rows="5" required></textarea>
+
+                <input type="submit" value="Gửi" name="submit">
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Phần chân trang -->
+<footer>
+    <div class="social">
+        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+    </div>
+    <ul class="list">
+        <li><a href="./">Trang Chủ</a></li>
+        <li><a href="productList.php">Sản Phẩm</a></li>
+    </ul>
+    <p class="copyright">copy by IVYmoda.com 2024</p>
+</footer>
+
 </body>
+
+<!-- Script kiểm tra số điện thoại -->
+<script>
+function validatePhoneNumber(input) {
+    var phoneNumber = input.value;
+    var regex = /^[0-9]{10}$/; // Regex kiểm tra số điện thoại 10 chữ số
+
+    if (!regex.test(phoneNumber)) {
+        input.setCustomValidity('Số điện thoại không đúng định dạng!');
+    } else {
+        input.setCustomValidity('');
+    }
+}
+</script>
+
 </html>

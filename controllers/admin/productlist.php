@@ -121,7 +121,7 @@ if (isset($_GET['search'])) {
                             if ($value['status']) { ?>
                                 <form action="productlist.php" method="post">
                                     <input type="text" name="id" hidden value="<?= $value['id'] ?>" style="display: none;">
-                                    <input type="submit" value="Khóa" name="block">
+                                    <!-- <input type="submit" value="Khóa" name="block"> -->
                                 </form>
                             <?php } else { ?>
                                 <form action="productlist.php" method="post">

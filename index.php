@@ -1,23 +1,27 @@
- <?php 
-    include_once './lib/session.php';
-    include_once './models/product.php';
-    include_once './models/cart.php';
-      $cart = new cart();
-        $totalQty = $cart->getTotalQtyByUserId();
-          
-         $product = new product();
-      $list = mysqli_fetch_all($product->getFeaturedProducts(), MYSQLI_ASSOC); // ✅ đúng tên
+        <?php
+        include_once './lib/session.php';
+        include_once './models/product.php';
+        include_once './models/cart.php';
 
-         if (isset($_GET['search'])){
+        $cart = new cart();
+        $totalQty = $cart->getTotalQtyByUserId();
+
+        $product = new product();
+        $list = mysqli_fetch_all($product->getFeaturedProducts(), MYSQLI_ASSOC);
+        ?>
+        <?php
+            if (isset($_GET['search'])) {
                 $search = addslashes($_GET['search']);
-                if(empty($search)){
-                     echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';     
+                if (empty($search)) {
+                    echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
                 } else {
-                      $list = $product->getProductByName($search);
+                    $list = $product->getProductByName($search);
+                
                 }
-         }
- ?>
-  <!DOCTYPE html>
+            } 
+        ?>
+
+        <!DOCTYPE html>
         <html lang="en">
 
         <head>
@@ -45,15 +49,15 @@
         <label class="logo"><a href="../index.php">IVY Moda</a></label>
         <ul id="dc_mega-menu-orange">
             <li class="li-index"><a href="../index.php">Trang chủ</a></li>
-            <li class="li-index"><a href="view/productList.php">Sản phẩm</a></li>
+            <li class="li-index"><a href="productList.php">Sản phẩm</a></li>
             <li class="li-index"><a href="view/order.php" id="order">Đơn hàng</a></li>
 
             <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
-                <li class="li-index"><a href="view/info.php" id="signin">Thông tin cá nhân</a></li>
-                <li class="li-index"><a href="view/logout.php" id="signin">Đăng xuất</a></li>
+                <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
+                <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
             <?php } else { ?>
-                <li class="li-index"><a href="view/register.php" id="signup">Đăng ký</a></li>
-                <li class="li-index"><a href="view/login.php" id="signin">Đăng nhập</a></li>
+                <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
+                <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
             <?php } ?>
         </ul>
 
@@ -161,4 +165,3 @@
         </body>
 
         </html>
-

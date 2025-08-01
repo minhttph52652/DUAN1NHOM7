@@ -1,25 +1,29 @@
 <?php
 $filepath = realpath(dirname(__FILE__));
-include_once($filepath . '/..lib/session.php');
-include_once($filepath . '/..lib/database.php');
-include_once($filepath . '/..lib/SMTP.php');
-include_once($filepath . '/..lib/Exception.php');
+include_once($filepath . '/../lib/session.php');
+include_once($filepath . '/../lib/database.php');
+// include_once($filepath . '/../lib/PHPMailer.php');
+include_once($filepath . '/../lib/SMTP.php');
+include_once($filepath . '/../lib/Exception.php');
+
 use PHPMailer\PHPMailer\PHPMailer;
 ?>
 
 <?php
-
-class user 
+/**
+ * 
+ */
+class user
 {
-    private $db;
-    public  function __construct() 
-    {
-        $this->db = new Database();
-    }
-    //Người dùng đăng nhập
-    public function login($email, $password)
-    {
-        // Nên dùng mysqli_real_escape_string để tránh SQL Injection
+	private $db;
+	public function __construct()
+	{
+		$this->db = new Database();
+	}
+
+	public function login($email, $password)
+{
+    // Nên dùng mysqli_real_escape_string để tránh SQL Injection
     $email = $this->db->link->real_escape_string($email);
     $password = $this->db->link->real_escape_string($password);
 
@@ -43,18 +47,18 @@ class user
 		
         return "Email hoặc mật khẩu không đúng!";
     }
-    }
-    //Đăng kí tài khoản người dùng
-    public function insert($data)
-    {
-        //Lấy dữ liệu từ mảng $data
+}
+
+
+	public function insert($data)
+{
     $fullName = $data['fullName'];
     $email = $data['email'];
     $dob = $data['dob'];
     $address = $data['address'];
-    $password = md5($data['password']); //mã hóa mật khẩu bằng md5
+    $password = md5($data['password']);
 
-    // Check email tồn tại hay chư 
+    // Check email tồn tại
     $check_email = "SELECT * FROM users WHERE email='$email' LIMIT 1";
     $result_check = $this->db->select($check_email);
 
@@ -72,11 +76,12 @@ class user
     } else {
         return 'Đăng ký thất bại. Vui lòng thử lại.';
     }
-    }
+}
 
-    public function update($data)
+
+	public function update($data)
 	{
-		$userId = Session::get('userId');///Lấy userID của người đang đăng nhập 
+		$userId = Session::get('userId');
 		$fullName = $data['fullName'];
 		$email = $data['email'];
 		$dob = $data['dob'];
@@ -88,7 +93,7 @@ class user
 		return $result;
 	}
 
-    public function get() //lấy thông tin tài khoản người dùng đang đăng nhập, dựa vào userId
+	public function get()
 	{
 		$userId = Session::get('userId');
 		$query = "SELECT * FROM users WHERE id = '$userId' LIMIT 1";
@@ -100,14 +105,14 @@ class user
 		return false;
 	}
 
-    public function getUserById($id) //lấy thông tin người dùng theo ID bất kỳ 
+	public function getUserById($id)
 	{
 		$query = "SELECT * FROM users where id = '$id'";
 		$result = $this->db->select($query);
 		return $result;
 	}
 
-    public function getAllAdmin($page = 1, $total = 8)//lấy ds người dùng(admin hoặc tất cả)
+	public function getAllAdmin($page = 1, $total = 8)
 	{
 		if ($page <= 0) {
 			$page = 1;
@@ -119,9 +124,9 @@ class user
              limit $tmp,$total";
 		$result = $this->db->select($query);
 		return $result;
-	}   
+	}
 
-    public function getAll() // lấy toàn bộ danh sách người dùng
+	public function getAll()
 	{
 		$query =
 			"SELECT users.*, role.name as cateName
@@ -130,7 +135,7 @@ class user
 		return $result;
 	}
 
-    public function getCountPaging($row = 8)//mặc định 8 dòng mỗi trang 
+	public function getCountPaging($row = 8)
 	{
 		$query = "SELECT COUNT(*) FROM users";
 		$mysqli_result = $this->db->select($query);
@@ -142,7 +147,7 @@ class user
 		return false;
 	}
 
-    public function getUserByName($name_u) //tìm kiếm người dùng theo tên gần đúng
+	public function getUserByName($name_u)
 	{
 		$query =
 			"SELECT *
@@ -156,7 +161,7 @@ class user
 		return false;
 	}
 
-    public function getLastUserId() //lấy ra thông tin của người dùng vừa được tạo gần nhất
+	public function getLastUserId()
 	{
 		$query = "SELECT * FROM users ORDER BY id DESC LIMIT 1";
 		$mysqli_result = $this->db->select($query);
@@ -167,7 +172,8 @@ class user
 		return false;
 	}
 
-    public function block($id)
+	
+	public function block($id)
 	{
 		$query = "UPDATE users SET status = 0 where id = '$id'";
 		$result = $this->db->delete($query);
@@ -178,7 +184,7 @@ class user
 		}
 	}
 
-    public function delete($id)
+	public function delete($id)
 	{
 		$query = "DELETE FROM users WHERE id = $id";
 		$row = $this->db->delete($query);
@@ -188,18 +194,17 @@ class user
 		return false;
 	}
 
-    // public function active($id)//kích hoạt lại tài khoản đã bị khóa
-	// {
-	// 	$query = "UPDATE users SET status = 1 where id = '$id'";
-	// 	$result = $this->db->update($query);
-	// 	if ($result) {
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
-
-    public function updateStatus($id)
+	public function active($id)
+	{
+		$query = "UPDATE users SET status = 1 where id = '$id'";
+		$result = $this->db->delete($query);
+		if ($result) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function updateStatus($id)
 	{
 		$query = "UPDATE users SET `status` = 1 where id = '$id' ";
 		$result = $this->db->update($query);
@@ -210,13 +215,12 @@ class user
 		}
 	}
 
-    public function getUserByOrder($orderId)//lấy thông tin người dùng (user) dựa trên mã đơn hàng
+	public function getUserByOrder($orderId)
 	{
 		$query1 = "SELECT * FROM orders WHERE id = '$orderId'";
 		$mysqli_result1 = $this->db->select($query1);
 		$user = $mysqli_result1->fetch_assoc();
 		$userId = $user['userId'];
-        //Lấy thông tin người dùng từ bảng users
 		$query = "SELECT * FROM users WHERE id = $userId LIMIT 1";
 		$mysqli_result = $this->db->select($query);
 		if ($mysqli_result) {
@@ -225,20 +229,20 @@ class user
 		}
 		return false;
 	}
-    public function getPassword($email)
+
+	public function getPassword($email)
 	{
-        //kiểm tra xem email có tồn tại trong bảng users.
 		$check_email = "SELECT * FROM users WHERE email='$email' LIMIT 1";
 		$result_check = $this->db->select($check_email);
 		if ($result_check) {
-			 //Tạo mật khẩu mới gồm 5 chữ số và mã hoá bằng md5.
+			// Genarate captcha
 			$newPassword = rand(10000, 99999);
 			$newPass = md5($newPassword);
 			$query = "UPDATE `users` SET `password` = '$newPass' WHERE `email` = '$email'";
 			$result = $this->db->update($query);
 			if ($result) {
-				//  Gửi email chứa mật khẩu mới về cho người dùng.
-				$mail = new PHPMailer();
+				// Send email
+				// $mail = new PHPMailer();
 				$mail->IsSMTP();
 				$mail->Mailer = "smtp";
 
@@ -270,3 +274,4 @@ class user
 
 
 }
+?>

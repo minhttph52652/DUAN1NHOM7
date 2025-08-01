@@ -6,7 +6,8 @@
         $totalQty = $cart->getTotalQtyByUserId();
           
          $product = new product();
-         $list = myspli_fetch_all($product->getFeaturedProducts(),MYSQLI_ASSOC);
+      $list = mysqli_fetch_all($product->getFeaturedProducts(), MYSQLI_ASSOC); // ✅ đúng tên
+
          if (isset($_GET['search'])){
                 $search = addslashes($_GET['search']);
                 if(empty($search)){

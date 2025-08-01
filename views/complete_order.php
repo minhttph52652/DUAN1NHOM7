@@ -17,6 +17,13 @@ if (isset($_GET['orderId'])) {
     // Gọi hàm completeOrder để đánh dấu đơn hàng là đã hoàn tất
     $result = $order->completeOrder($_GET['orderId']);
 
-
+    // Nếu thành công, hiển thị thông báo và quay lại trang trước
+    if ($result) {
+        echo '<script type="text/javascript">alert("Thành công!"); history.back();</script>';
+    } 
+    // Nếu thất bại, hiển thị thông báo lỗi và quay lại trang trước
+    else {
+        echo '<script type="text/javascript">alert("Thất bại!"); history.back();</script>';
+    }
 
 }

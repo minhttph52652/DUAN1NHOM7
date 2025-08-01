@@ -13,6 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $order = new order();           // Tạo một đối tượng từ class order
     $result = $order->add($_POST);  // Gọi phương thức add() và truyền dữ liệu form để tạo đơn hàng mới
 
-   
+
+    // Nếu đặt hàng thành công, thông báo và chuyển hướng đến trang order.php
+   if ($result) {
+        echo '<script type="text/javascript">alert("Đặt hàng thành công!"); window.location.href = "order.php";</script>';
+    } else {
+        // Nếu thất bại, hiển thị thông báo lỗi và quay lại trang trước đó
+        echo '<script type="text/javascript">alert("Đặt hàng thất bại!"); history.back();</script>';
+    }
 }
 ?>

@@ -49,15 +49,15 @@
         <label class="logo"><a href="../index.php">IVY Moda</a></label>
         <ul id="dc_mega-menu-orange">
             <li class="li-index"><a href="../index.php">Trang chủ</a></li>
-            <li class="li-index"><a href="productList.php">Sản phẩm</a></li>
+            <li class="li-index"><a href="view/productList.php">Sản phẩm</a></li>
             <li class="li-index"><a href="view/order.php" id="order">Đơn hàng</a></li>
 
             <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
-                <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
-                <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
+                <li class="li-index"><a href="view/info.php" id="signin">Thông tin cá nhân</a></li>
+                <li class="li-index"><a href="view/logout.php" id="signin">Đăng xuất</a></li>
             <?php } else { ?>
-                <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
-                <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
+                <li class="li-index"><a href="view/register.php" id="signup">Đăng ký</a></li>
+                <li class="li-index"><a href="view/login.php" id="signin">Đăng nhập</a></li>
             <?php } ?>
         </ul>
 

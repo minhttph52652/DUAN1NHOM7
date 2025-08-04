@@ -97,7 +97,7 @@ $result = $order->getOrderByUser();
                     </td>
                     <?php if ($value['status'] == 'Delivered') { ?>
                         <td>
-                            <a href="../view/complete_order.php?orderId=<?= $value['id'] ?>">Đang giao (Click để xác nhận)</a>
+                            <a href="../views/complete_order.php?orderId=<?= $value['id'] ?>">Đang giao (Click để xác nhận)</a>
                         </td>
                         <td>
                             <a href="../view/orderdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
@@ -126,7 +126,7 @@ $result = $order->getOrderByUser();
         <li><a href="../index.php">Trang Chủ</a></li>
         <li><a href="../productList.php">Sản Phẩm</a></li>
     </ul>
-    <p class="copyright">copy by IVYmoda.com 2025</p>
+    <p class="copyright">copy by IVYmoda.com 2024</p>
 </footer>
 </body>
 </html>

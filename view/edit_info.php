@@ -1,23 +1,14 @@
 <?php
-// Gồm model user để lấy thông tin người dùng
 include '../models/user.php';
-
-// Khởi tạo đối tượng user
 $user = new user();
-
-// Lấy thông tin cá nhân người dùng
 $userInfo = $user->get();
 
-// Kiểm tra khi người dùng submit form POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    // Gọi hàm update trong model user để cập nhật thông tin
     $result = $user->update($_POST);
     if ($result) {
-        // Thông báo thành công
         echo '<script type="text/javascript">alert("Cập nhật thông tin cá nhân thành công!"); history.back();</script>';
         header("Location:./info.php");
     } else {
-        // Thông báo thất bại
         echo '<script type="text/javascript">alert("Cập nhật thông tin cá nhân thất bại!"); history.back();</script>';
         header("Location:./info.php");
     }
@@ -25,12 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 ?>
 
 <?php
-// Gồm các file session và models
 include_once '../lib/session.php';
 include_once '../models/product.php';
 include_once '../models/cart.php';
 
-// Tạo đối tượng cart và lấy tổng số sản phẩm
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
 ?>
@@ -49,7 +38,6 @@ $totalQty = $cart->getTotalQtyByUserId();
     <title>Cập nhật thông tin cá nhân</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script>
-        // Tự động chuyển ảnh trong banner
         $(function() {
             $('.fadein img:gt(0)').hide();
             setInterval(function() {
@@ -60,15 +48,16 @@ $totalQty = $cart->getTotalQtyByUserId();
 </head>
 
 <body>
-    <!-- Thanh menu -->
-
-    <nav>
+<nav>
         <label class="logo"><a href="index.php">IVY Moda</a></label>
         <ul id="dc_mega-menu-orange">
-            <li class="li-index"><a href="index.php">Trang chủ</a></li>
-            <li class="li-index"><a href="productList.php">Sản phẩm</a></li>
+            <li class="li-index"><a href="index.php" >Trang chủ</a></li>
+            <li class="li-index"><a href="productList.php" >Sản phẩm</a></li>
+
             <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
-            <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+                
+            <?php
+            if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
                 <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
                 <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
             <?php } else { ?>
@@ -76,46 +65,40 @@ $totalQty = $cart->getTotalQtyByUserId();
                 <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
             <?php } ?>
         </ul>
-
-         <!-- Tìm kiếm -->
         <form class="c-search" action="" method="get">
             <div class="header_search">
                 <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </div>
         </form>
-
-         <!-- Giỏ hàng -->
         <a class="cart" href="checkout.php">
-            <i class="fa fa-shopping-cart"></i>
-            <sup class="sumItem">
-                <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
-            </sup>
+                    <i class="fa fa-shopping-cart"></i>
+                    <sup class="sumItem">
+                        <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
+                    </sup>
         </a>
-    </nav>    
-
-    <!-- Nội dung chính --> <!-- Banner slideshow ảnh -->
+    </nav>
     <section class="banner">
         <div class="fadein">
             <?php
+            // display images from directory
+            // directory path
             $dir = "../images/slider/";
+
             $scan_dir = scandir($dir);
             foreach ($scan_dir as $img) :
                 if (in_array($img, array('.', '..')))
                     continue;
-            ?>
+            ?> 
                 <img src="<?php echo $dir . $img ?>" alt="<?php echo $img ?>">
             <?php endforeach; ?>
         </div>
     </section>
-
-    <!-- Tiêu đề trang -->
     <div class="featuredProducts">
-        <h1>Chỉnh sửa thông tin cá nhân</h1>
+        <h1>Chỉnh sửa thông tin cá nhân</b></h1>
     </div>
-
-    <!-- Form cập nhật thông tin -->
     <div class="container-single">
+        
         <div class="login">
             <form action="edit_info.php" method="post" class="form-login">
                 <label for="fullName">Họ tên</label>
@@ -139,13 +122,12 @@ $totalQty = $cart->getTotalQtyByUserId();
 
                 <div>
                     <input type="submit" value="Cập nhật" name="submit">
-                    <button style="background:wheat"><a href="./info.php">Hủy bỏ</a></button>
+                    <button style="background:wheat"><a  href="./info.php">Hủy bỏ</a></button>
                 </div>
             </form>
         </div>
     </div>
-
-    <!-- Footer -->
+    </div>
     <footer>
         <div class="social">
             <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
@@ -153,15 +135,16 @@ $totalQty = $cart->getTotalQtyByUserId();
             <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
         </div>
         <ul class="list">
-            <li><a href="./">Trang Chủ</a></li>
-            <li><a href="productList.php">Sản Phẩm</a></li>
+            <li>
+                <a href="./">Trang Chủ</a>
+            </li>
+            <li>
+                <a href="productList.php">Sản Phẩm</a>
+            </li>
         </ul>
         <p class="copyright">copy by IVYmoda.com 2024</p>
     </footer>
-
 </body>
-
-<!-- JS kiểm tra mật khẩu nhập lại -->
 <script language='javascript' type='text/javascript'>
     function check(input) {
         if (input.value != document.getElementById('password').value) {

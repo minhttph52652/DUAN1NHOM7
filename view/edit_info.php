@@ -58,3 +58,34 @@ $totalQty = $cart->getTotalQtyByUserId();
         });
     </script>
 </head>
+
+<body>
+    <!-- Thanh menu -->
+
+    <nav>
+        <label class="logo"><a href="index.php">IVY Moda</a></label>
+        <ul id="dc_mega-menu-orange">
+            <li class="li-index"><a href="index.php">Trang chủ</a></li>
+            <li class="li-index"><a href="productList.php">Sản phẩm</a></li>
+            <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+                <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
+                <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
+            <?php } else { ?>
+                <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
+                <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
+            <?php } ?>
+        </ul>
+
+         <!-- Tìm kiếm -->
+        <form class="c-search" action="" method="get">
+            <div class="header_search">
+                <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        
+    </nav>    
+
+
+</body>

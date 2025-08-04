@@ -242,7 +242,10 @@ class user
 			$result = $this->db->update($query);
 			if ($result) {
 				// Send email
+
 				// $mail = new PHPMailer();
+
+				$mail = new PHPMailer();
 				$mail->IsSMTP();
 				$mail->Mailer = "smtp";
 

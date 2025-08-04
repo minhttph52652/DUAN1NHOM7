@@ -35,7 +35,7 @@ class cart
                 return 'out of stock';
             }
             
-            $query_insert = "UPDATE cart SET qty = qty + 1 WHERE productId = '$productId' AND userId = '$userId' ";
+            $query_insert = "UPDATE cart SET qty = qty + 1 WHERE productId = $productId AND userId = '$userId' ";
             $insert_cart = $this->db->update($query_insert);
             if ($insert_cart) {
                 return true;

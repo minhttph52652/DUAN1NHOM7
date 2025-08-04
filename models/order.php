@@ -61,7 +61,7 @@ class order
                 }
             }
                 // Xóa toàn bộ sản phẩm trong giỏ hàng của người dùng sau khi đặt hàng
-                $sql_delete_cart = "DELETE FROM cart WHERE userId = '$userId'";
+                $sql_delete_cart = "DELETE FROM cart WHERE userId = $userId";
                 $delete_cart = $this->db->delete($sql_delete_cart);
                 if ($delete_cart) {
                     return true;
@@ -189,7 +189,7 @@ class order
                     }
                     return false;
                 }
-                return false;;
+                return false;
             }
 
             public function cancelOrder($id)
@@ -251,7 +251,7 @@ class order
 
             public function getDate($id)
             {
-                $query = "SELECT `receivedDate` FROM orders WHERE `userId` = $id AND `status` = 'Spam' LIMIT 1";
+                $query = "SELECT `receivedDate` FROM `orders` WHERE `userId` = $id AND `status` = 'Spam' LIMIT 1";
                 $mysqli_result = $this->db->select($query);
                 if ($mysqli_result) {
                     return $mysqli_result;

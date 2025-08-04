@@ -160,3 +160,16 @@ $totalQty = $cart->getTotalQtyByUserId();
     </footer>
 
 </body>
+
+<!-- JS kiểm tra mật khẩu nhập lại -->
+<script language='javascript' type='text/javascript'>
+    function check(input) {
+        if (input.value != document.getElementById('password').value) {
+            input.setCustomValidity('Password Must be Matching.');
+        } else {
+            input.setCustomValidity('');
+        }
+    }
+</script>
+
+</html>

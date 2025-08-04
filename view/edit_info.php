@@ -84,7 +84,14 @@ $totalQty = $cart->getTotalQtyByUserId();
                 <button type="submit"><i class="fas fa-search"></i></button>
             </div>
         </form>
-        
+
+         <!-- Giỏ hàng -->
+        <a class="cart" href="checkout.php">
+            <i class="fa fa-shopping-cart"></i>
+            <sup class="sumItem">
+                <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
+            </sup>
+        </a>
     </nav>    
 
 

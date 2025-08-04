@@ -109,5 +109,41 @@ $totalQty = $cart->getTotalQtyByUserId();
         </div>
     </section>
 
+    <!-- Tiêu đề trang -->
+    <div class="featuredProducts">
+        <h1>Chỉnh sửa thông tin cá nhân</h1>
+    </div>
+
+    <!-- Form cập nhật thông tin -->
+    <div class="container-single">
+        <div class="login">
+            <form action="edit_info.php" method="post" class="form-login">
+                <label for="fullName">Họ tên</label>
+                <input type="text" id="fullName" value="<?= $userInfo['fullname'] ?>" name="fullName" placeholder="Họ tên..." required>
+
+                <label for="email">Email</label>
+                <p class="error"><?= !empty($result) ? $result : '' ?></p>
+                <input type="email" id="email" value="<?= $userInfo['email'] ?>" name="email" placeholder="Email..." required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" placeholder="Mật khẩu..." required>
+
+                <label for="repassword">Nhập lại mật khẩu</label>
+                <input type="password" id="repassword" name="repassword" required placeholder="Nhập lại mật khẩu..." oninput="check(this)">
+
+                <label for="address">Địa chỉ</label>
+                <textarea name="address" id="address" cols="30" rows="5" required><?= $userInfo['address'] ?></textarea>
+
+                <label for="dob">Ngày sinh</label>
+                <input type="date" value="<?= $userInfo['dob'] ?>" name="dob" id="dob" required>
+
+                <div>
+                    <input type="submit" value="Cập nhật" name="submit">
+                    <button style="background:wheat"><a href="./info.php">Hủy bỏ</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
 </body>

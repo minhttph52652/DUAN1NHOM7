@@ -16,7 +16,7 @@ include_once($productPath);
 
     if ($role_id == 1) {
         // Đường dẫn này là từ gốc dự án: controllers/admin/productlist.php
-        header("Location:controllers/admin/productlist.php");
+        // header("Location:controllers/admin/productlist.php");
     } else {
         // Chuyển về file index ở ngoài thư mục gốc (DUANNHOM7/index.php)
         header("Location:../../index.php");

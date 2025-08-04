@@ -97,15 +97,15 @@ $result = $order->getOrderByUser();
                     </td>
                     <?php if ($value['status'] == 'Delivered') { ?>
                         <td>
-                            <a href="../complete_order.php?orderId=<?= $value['id'] ?>">Đang giao (Click để xác nhận)</a>
+                            <a href="../view/complete_order.php?orderId=<?= $value['id'] ?>">Đang giao (Click để xác nhận)</a>
                         </td>
                         <td>
-                            <a href="../orderdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
+                            <a href="../view/orderdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
                         </td>
                     <?php } else { ?>
                         <td><?= $value['status'] ?></td>
                         <td>
-                            <a href="../orderdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
+                            <a href="../view/orderdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
                         </td>
                     <?php } ?>
                 </tr>

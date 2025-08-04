@@ -134,7 +134,8 @@ include_once __DIR__ . '/../models/user.php';
                         </tr>
                     </table>
                     <?php if ($userInfo['role_id'] == 1) {
-                        echo '<div><a class="infor_chuyen" href="./admin/index.php">Chuyển sang trang Admin</a></div>';
+                      echo '<div><a class="infor_chuyen" href="../controllers/admin/productlist.php">Chuyển sang trang Admin</a></div>';
+;
                     }elseif ($userInfo['role_id'] == 3){
                         echo '<div><a class="infor_chuyen" href="./staff/index.php">Chuyển sang trang Staff</a></div>';
                     }

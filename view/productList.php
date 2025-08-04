@@ -6,26 +6,23 @@ include_once '../models/cart.php';
 
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
-
 $product = new product();
-$list = $product->getProductsByCateId((isset($_GET['page']) ? $_GET['page'] : 1), (isset($_GET['cateId']) ? $_GET['cateId'] : 6));
+$list = $product->getProductsByCateId((isset($_GET['page']) ? $_GET['page'] :1), (isset($_GET['cateId']) ? $_GET['cateId'] :6));
 $pageCount = $product->getCountPagingClient((isset($_GET['cateId']) ? $_GET['cateId'] : 6));
-
 $categories = new categories();
 $categoriesList = $categories->getAll();
 ?>
-<?php
-    if (isset($_GET['search'])) {
-        $search = addslashes($_GET['search']);
-        if (empty($search)) {
-            echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
-        } else {
-            $list = $product->getProductByName($search);
-           
-        }
-    } 
-?>
 
+<?php
+if (isset($_GET['search'])) {
+    $search = addslashes($_GET['search']);
+    if (empty($search)) {
+        echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
+    } else {
+        $list = $product->getProductByName($search);
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

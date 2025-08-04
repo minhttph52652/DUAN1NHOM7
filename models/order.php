@@ -276,7 +276,7 @@ class order
             $email_check = $result->fetch_assoc();
             $email = $email_check['email'];
             if ($email) {
-$mail = new PHPMailer();
+            $mail = new PHPMailer();
             $mail->IsSMTP();
             $mail->Mailer = "smtp";
 

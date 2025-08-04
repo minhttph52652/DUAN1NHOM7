@@ -94,5 +94,20 @@ $totalQty = $cart->getTotalQtyByUserId();
         </a>
     </nav>    
 
+    <!-- Nội dung chính --> <!-- Banner slideshow ảnh -->
+    <section class="banner">
+        <div class="fadein">
+            <?php
+            $dir = "../images/slider/";
+            $scan_dir = scandir($dir);
+            foreach ($scan_dir as $img) :
+                if (in_array($img, array('.', '..')))
+                    continue;
+            ?>
+                <img src="<?php echo $dir . $img ?>" alt="<?php echo $img ?>">
+            <?php endforeach; ?>
+        </div>
+    </section>
+
 
 </body>

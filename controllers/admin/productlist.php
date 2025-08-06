@@ -13,13 +13,13 @@ if ($role_id == 1) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $product = new product();
     if (isset($_POST['block'])) {
-        $result = $product->block($_POST['id']);// gọi phương thức block() để khóa sản phẩm
+        $result = $product->block($_POST['id']);
         if ($result) {
             echo '<script type="text/javascript">alert("Khóa sản phẩm thành công!");</script>';
         } else {
             echo '<script type="text/javascript">alert("Khóa sản phẩm thất bại!");</script>';
         }
-    } else if (isset($_POST['active'])) {// gọi phương thức active() để mở khóa sản phẩm
+    } else if (isset($_POST['active'])) {
         $result = $product->active($_POST['id']);
         if ($result) {
             echo '<script type="text/javascript">alert("Kích hoạt sản phẩm thành công!");</script>';
@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $product = new product();
-$list = $product->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));// Lấy danh sách sản phẩm với phân trang
-$pageCount = $product->getCountPaging();// Lấy tổng số trang để hiển thị phân trang
+$list = $product->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));
+$pageCount = $product->getCountPaging();
 
 if (isset($_GET['search'])) {
-    $search = addslashes($_GET['search']);// Lấy từ khóa tìm kiếm từ URL
+    $search = addslashes($_GET['search']);
     if (empty($search)) {
         echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
     } else {
@@ -54,7 +54,7 @@ if (isset($_GET['search'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css>
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://use.fontawesome.com/2145adbb48.js"></script>
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>

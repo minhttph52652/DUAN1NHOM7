@@ -1,6 +1,6 @@
 <?php
-               include '../lib/session.php';
-       include '../lib/categories.php';
+       include '../../lib/session.php';
+       include '../../models/categories.php';
         Session ::checkSession('admin');
         $role_id = Session::get('role_id');
        if ($role_id == 1) {
@@ -9,25 +9,11 @@
         $result = $category->insert($_POST['name']);
     }
 } else {
-    header("Location:../index.php");
+    header("Location:../../index.php");
 }
   
   ?>
-   <?php
-include '../lib/session.php';
-include '../models/categories.php';
-Session::checkSession('admin');
-$role_id = Session::get('role_id');
-if ($role_id == 1) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-        $category = new categories();
-        $result = $category->insert($_POST['name']);
-    }
-} else {
-    header("Location:../index.php");
-}
-
-?>
+ 
 
 
 <!DOCTYPE html>

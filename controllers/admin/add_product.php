@@ -1,20 +1,23 @@
 <?php
-   include '../lib/session.php';
-   include '../models/product.php';
-    Session::checkSession('staff');
-    $role_id= Session::get('role_id');
-    if ($role_id == 3){
-           if($_SERVER['REQUEST_METHOD']== 'POST'&& isset($_POST['submit'])){
-                $product = new product();
-                $result = $product->insert($_POST,$_FILES);
-           }
+include_once __DIR__ . '/../../lib/session.php';
+include_once __DIR__ . '/../../models/product.php';
+include_once __DIR__ . '/../../models/categories.php'; // Thiếu dòng này
 
-    } else{
-         header("Location:../index.php");
+Session::checkSession('admin');
+$role_id = Session::get('role_id');
+
+if ($role_id == 1) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {//  kiểm tra nếu form được submit bằng POST
+        $product = new product();
+        $result = $product->insert($_POST, $_FILES);// thêm vào csdl 
     }
-     $category = new categories();
-     $categoriesList = $category->getAll();
+} else {
+    header("Location: ../../index.php");
+    exit();
+}
 
+$category = new categories();
+$categoriesList = $category->getAll();
 ?>
 
 <!DOCTYPE html>

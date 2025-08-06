@@ -8,17 +8,17 @@ $role_id = Session::get('role_id');
  }  else {
       header("Location:../index.php");
  }
-   if( $_SERVER['REQUEST_METHOD']== 'POST'){
+   if( $_SERVER['REQUEST_METHOD']== 'POST'){ // gửi form bằng phương thức POST
       $categories = new categories();
       if (isset($_POST['block'])){
-           $result = $categories->block($_POST['id']);
+           $result = $categories->block($_POST['id']); // gọi hàm để khóa danh mục
            if( $result){
                echo '<script type="text/javascript">alert("Khóa danh mục thành công!");</script>';
            } else {
                echo '<script type="text/javascript">alert("Khóa danh mục thất bại!");</script>';
            }
       } else if (isset($_POST['active'])){
-           $result = $categories->active($_POST['id']);
+           $result = $categories->active($_POST['id']); // khóa danh mục
            if( $result){
                echo '<script type="text/javascript">alert("Kích hoạt danh mục thành công!");</script>';
            } else {
@@ -30,8 +30,8 @@ $role_id = Session::get('role_id');
       }
    }
      $categories = new categories();
-        $list = $categories->getAll((isset($_GET['page']) ? $_GET['page'] : 1));
-         $pageCount = $categories->getCountPaging();
+        $list = $categories->getAll((isset($_GET['page']) ? $_GET['page'] : 1));// lấy tất cả   danh mục phân theo trang
+         $pageCount = $categories->getCountPaging();// lấy sl để phân trang
 ?>
 
 <!DOCTYPE html>

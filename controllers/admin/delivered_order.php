@@ -30,7 +30,7 @@
              $addst = $statistical -> getStatistical($_GET['orderId'], $totalPrice['total'], $totaQty['total']);
 
              $user = new user();
-               $id = $user-> getUserByOrder($_GET['orderId'])// lấy thông tin người dùng theo đơn hàng
+               $id = $user-> getUserByOrder($_GET['orderId']);// lấy thông tin người dùng theo đơn hàng
                 $usId = $id['id'];
                 $mess = $order -> messComplete($usId);// gửi thông báo cho người dùng về việc đơn hàng đã hoàn thành
               if($result && $mess){

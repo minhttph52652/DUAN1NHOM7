@@ -94,7 +94,7 @@ $cancelOrderList = $order->getCancelOrder();
         </div>
 
         <div id="Processed" class="tabcontent">
-            <?php
+            <?php   
             if ($processedOrderList) { ?>
                 <table class="list">
                     <tr>

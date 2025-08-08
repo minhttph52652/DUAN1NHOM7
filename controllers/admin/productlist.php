@@ -90,7 +90,10 @@ if (isset($_GET['search'])) {
         </form>
     </div>
     <div class="container">
-        <?php $count = 1;
+        <?php $limit = 8; // số sản phẩm trên mỗi trang
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$count = ($page - 1) * $limit + 1; // STT bắt đầu theo trang
+
         if ($list) { ?>
             <table class="list">
                 <tr>

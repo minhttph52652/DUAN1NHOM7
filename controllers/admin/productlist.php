@@ -118,7 +118,9 @@ $count = ($page - 1) * $limit + 1; // STT bắt đầu theo trang
                         <td><?= $value['qty'] ?></td>
                         <td><?= ($value['status']) ? "Active" : "Block" ?></td>
                         <td>
-                            <a href="edit_product.php?id=<?= $value['id'] ?>">Sửa </a> <span> / </span>
+                         <a href="edit_product.php?productId=<?= $value['id'] ?>">Sửa</a>
+
+                            <span> / </span>
                             <a href="delete_product.php?id=<?= $value['id'] ?>"> Xóa</a>
                             <?php
                             if ($value['status']) { ?>

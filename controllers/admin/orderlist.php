@@ -9,7 +9,7 @@
     }
     include '../../models/order.php';
       $order = new order();
-    $processingOrderList = $order->getProcessingOrder();
+  $processingOrderList = $order->getProcessingOrder();
 $processedOrderList = $order->getProcessedOrder(); // THÊM DÒNG NÀY
 $deliveringOrderList = $order->getDeliveringOrder();
 $completeOrderList =  $order->getCompleteOrder();
@@ -147,7 +147,7 @@ $cancelOrderList = $order->getCancelOrder();
                             <td><?= ($value['status'] == "Cancel" || $value['status'] == "Spam") ? "" : (($value['status'] != "Processing") ? $value['receivedDate'] : "Dự kiến 3 ngày sau khi đơn hàng đã được xử lý" )?> <?= ($value['status'] != "Processed") ? "    " : "(Dự kiến)" ?> </td>
                             <td><?= $value['status'] ?></td>
                             <td>
-                                <a href="delivered_order.php?orderId=<?= $value['id'] ?>">Đã giao hàng thành công</a>
+                                <!-- <a href="delivered_order.php?orderId=<?= $value['id'] ?>">Đã giao hàng thành công</a> -->
                                 <br>
                                 <a href="orderlistdetail.php?orderId=<?= $value['id'] ?>">Chi tiết</a>
                             </td>

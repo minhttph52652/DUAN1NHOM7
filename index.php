@@ -157,7 +157,7 @@
                         <a href="./">Trang Chủ</a>
                     </li>
                     <li>
-                        <a href="productList.php">Sản Phẩm</a>
+                        <a href="./productList.php">Sản Phẩm</a>
                     </li>
                 </ul>
                 <p class="copyright">copy by IVYmoda.com 2025</p>

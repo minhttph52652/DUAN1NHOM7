@@ -1,233 +1,140 @@
 <?php
-    include '../../models/statistical.php';
-    include_once '../../lib/session.php';
-    Session::checkSession('admin');
-    $role_id = Session::get('role_id');
-    if ($role_id == 1){
-        # code...
-    } else {
-        header("Location:../../index.php");
-    }
+include '../../models/statistical.php';
+include_once '../../lib/session.php';
+Session::checkSession('admin');
+if(Session::get('role_id') != 1){
+    header("Location:../../index.php");
+}
 
-    $currentDate = date('Y-m-d');
-    $previousMonthDate = date('Y-m-d', strtotime('-1 month'));
-    $oneWeekAgo = date('Y-m-d', strtotime("-1 week"));
-    $oneYearAgo = date('Y-m-d', strtotime("-1 year"));
+$stat = new statistical();
+$today = date('Y-m-d');
+$monthAgo = date('Y-m-d', strtotime('-1 month'));
+$weekAgo = date('Y-m-d', strtotime('-1 week'));
+$yearAgo = date('Y-m-d', strtotime('-1 year'));
 
-    $statistical = new statistical();
-    $resurt_1m = $statistical->getSumTotalOrder($previousMonthDate, $currentDate);
+// Mặc định hiển thị tháng này
+$currentSum = $stat->getSumTotalOrder($monthAgo, $today);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://use.fontawesome.com/2145adbb48.js"></script>
-    <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Thống kê chi tiết</title>
-
+<meta charset="UTF-8">
+<title>Thống kê chi tiết</title>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<style>
+body{font-family:Arial;margin:20px;background:#f9f9f9;}
+nav ul{list-style:none;padding:0;display:flex;gap:15px;}
+nav ul li a{text-decoration:none;color:#333;}
+nav ul li a.active{font-weight:bold;}
+.title h1{margin-top:20px;}
+.container1{margin-top:20px;}
+.box{display:flex;gap:20px;margin-bottom:20px;}
+.part{flex:1;background:#fff;padding:15px;border-radius:10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.button-group{margin-bottom:20px;}
+.button-group button{padding:10px 20px;margin-right:10px;cursor:pointer;border:none;border-radius:5px;background:#2196F3;color:#fff;}
+.button-group button.active{background:#4CAF50;}
+#chart{height:300px;background:#fff;padding:10px;border-radius:10px;}
+</style>
 </head>
 <body>
-    <nav>
-        <input type="checkbox" id="check">
-        <label for="check" class="checkbtn">
-            <i class="fas fa-bars"></i>
-        </label>
-        <label class="logo"><a href="index.php">ADMIN</a></label>
-        <ul>
-            <li><a href="productlist.php">Quản lý Sản phẩm</a></li>
-            <li><a href="categoriesList.php">Quản lý Danh mục</a></li>
-            <li><a href="orderlist.php">Quản lý Đơn hàng</a></li>
-            <li><a href="userlist.php">Quản lý Người dùng</a></li>
-            <li><a href="orderlist.php" class="active">Thống kê</a></li>
-            <li><a href="transfer.php">Chuyển về trang chủ</a></li>
-        </ul>
-    </nav>
-    <div class="title">
-        <h1>Thống kê số liệu</h1>
+
+<nav>
+    <ul>
+        <li><a href="productlist.php">Quản lý Sản phẩm</a></li>
+        <li><a href="categoriesList.php">Quản lý Danh mục</a></li>
+        <li><a href="orderlist.php">Quản lý Đơn hàng</a></li>
+        <li><a href="userlist.php">Quản lý Người dùng</a></li>
+        <li><a href="orderlist.php" class="active">Thống kê</a></li>
+        <li><a href="transfer.php">Chuyển về trang chủ</a></li>
+    </ul>
+</nav>
+
+<div class="title"><h1>Thống kê số liệu</h1></div>
+
+<div class="container1">
+
+    <div class="button-group">
+        <button data-range="week">Tuần này</button>
+        <button class="active" data-range="month">Tháng này</button>
+        <button data-range="year">365 ngày qua</button>
     </div>
 
-    <div class="container1">
-        <div class="box1">
-            <form id="dateForm">
-                <div class="form-group">
-                    <label for="startDate">Ngày bắt đầu:</label>
-                    <input type="date" id="startDate" name="startDate">
-                </div>
-                <div class="form-group">
-                    <label for="endDate">Ngày kết thúc:</label>
-                    <input type="date" id="endDate" name="endDate">         
-                </div>
-                <select class="select-filter">
-                    <option value="1">Tháng này</option>
-                    <option value="2">Tuần này</option>
-                    <option value="3">365 ngày qua</option>
-                </select>
-                <button id="btn-filter">Lọc dữ liệu</button>
-                <!-- <button id="toggleButton">Chế độ 1</button> -->
-            </form>
-
-            <div class="box">
-                <div class="part" id="qty">
-                    <span>Số đơn hàng tháng gần đây</span>
-                    <span><?=$resurt_1m['sum_order']?></span>
-                </div>
-                <div class="part" id="revenue">
-                    <span>Tổng doanh thu tháng gần đây</span>
-                    <span><?=number_format($resurt_1m['sum_sale'])?> VND</span>
-                </div>
-                <div class="part" id="profit">
-                    <span>Tổng lợi nhuận tháng gần đây</span>
-                    <span><?=number_format($resurt_1m['sum_profit'])?> VND</span>
-                </div>
-            </div>
+    <div class="box" id="summary">
+        <div class="part">
+            <span>Số đơn hàng</span>
+            <h3><?=$currentSum['sum_order']?></h3>
         </div>
-
-        <div id="myfirstchart" style="height: 250px;"></div>
+        <div class="part">
+            <span>Doanh thu</span>
+            <h3><?=number_format($currentSum['sum_sale'])?> VND</h3>
+        </div>
+        <div class="part">
+            <span>Lợi nhuận</span>
+            <h3><?=number_format($currentSum['sum_profit'])?> VND</h3>
+        </div>
     </div>
 
-    <footer>
-        <p class="copyright">copy by IVYmoda.com 2024</p>
-    </footer>
-</body>
+    <div id="chart"></div>
+</div>
 
+<footer><p class="copyright">copy by IVYmoda.com 2025</p></footer>
 
 <script>
-    filter30Day();
-    function filter30Day(){
-        
-        var startDate = "<?php echo $previousMonthDate; ?>";
-        var endDate = "<?php echo $currentDate; ?>";
-        $.ajax({
-            url: "ajax_chart.php", 
-            type: "POST",   
-            data: { start: startDate, end: endDate },
-            success: function(response) {
-                if(response){
-                    var data = JSON.parse(response);
-                    chart.setData(data);
-                }
-                else{
-                    alert("Không có đơn hàng trong thời gian này!");
-                }
-            }
-        });
-    }
-
-    $(".select-filter").change(function(e) {
-        e.preventDefault();
-        $value = $(this).val();
-        var startDate;
-        var endDate;
-        if($value == "1"){
-            startDate = "<?php echo $previousMonthDate; ?>";
-            endDate = "<?php echo $currentDate; ?>";
-        }
-        else if($value == "2"){
-            startDate = "<?php echo $oneWeekAgo; ?>";
-            endDate = "<?php echo $currentDate; ?>";
-        }
-        else if($value == "3"){
-            startDate = "<?php echo $oneYearAgo; ?>";
-            endDate = "<?php echo $currentDate; ?>";
-        }
-        
-        $.ajax({
-            url: "ajax_chart.php", 
-            type: "POST",
-            data: { start: startDate, end: endDate },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if(data != null){
-                    chart.setData(data);
-                }
-                else{
-                    alert("Không có đơn hàng trong thời gian này!");
-                }
-            }
-        });
-    });
-
-    $("#btn-filter").click(function(e) {
-        e.preventDefault();
-        var startDate = $("#startDate").val();
-        var endDate = $("#endDate").val();
-        $.ajax({
-            url: "ajax_chart.php", 
-            type: "POST",
-            data: { start: startDate, end: endDate },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if(data != null){
-                    chart.setData(data);
-                }
-                else{
-                    alert("Không có đơn hàng trong thời gian này!");
-                }
-            }
-        });
-    });
-
-
-
-    var chart =  new Morris.Bar({
-    element: 'myfirstchart',
+var chart = new Morris.Bar({
+    element: 'chart',
     hideHover: 'auto',
     parseTime: false,
-    lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#76656'],
     xkey: 'order_date',
-    ykeys: ['total_order', 'sales', 'profit', 'quantity'],
-    labels: ['Đơn hàng', 'Doanh số', 'Lợi nhuận', 'Số lượng']
+    ykeys: ['total_order', 'profit'],
+    labels: ['Số đơn hàng', 'Lợi nhuận'],
+    barColors: ['#4CAF50', '#FF9800']
+});
+
+function loadData(range) {
+    var start;
+    var end = "<?=$today?>";
+    if (range == "week") start = "<?=$weekAgo?>";
+    else if (range == "month") start = "<?=$monthAgo?>";
+    else if (range == "year") start = "<?=$yearAgo?>";
+
+    $.post('ajax_chart.php', { start: start, end: end, range: range }, function(res) {
+        var response = JSON.parse(res);
+        if (response.data.length > 0) {
+            chart.setData(response.data);
+
+            // Cập nhật box số liệu
+            $('#summary').html(
+                '<div class="part"><span>Số đơn hàng</span><h3>' + response.total_orders + '</h3></div>' +
+                '<div class="part"><span>Lợi nhuận</span><h3>' + number_format(response.total_profit) + ' VND</h3></div>'
+            );
+        } else {
+            chart.setData([]);
+            $('#summary').html('<p>Không có dữ liệu</p>');
+        }
     });
-    
+}
 
-    // $("#toggleButton").click(function(e) {
-        
-    //         e.preventDefault();
-    //         var button = $(this);
-        
-    //         if (button.text() === "Chế độ 1") {
-    //             button.text("Chế độ 2");
-    //             alert(chart.data);
-    //             // Thực hiện các hành động cho chế độ 1
-    //             var chart =  new Morris.Line({
-    //             element: 'myfirstchart',
-    //             hideHover: 'auto',
-    //             parseTime: false,
-    //             lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#76656'],
-    //             xkey: 'order_date',
-    //             ykeys: ['total_order', 'sales', 'profit', 'quantity'],
-    //             labels: ['Đơn hàng', 'Doanh số', 'Lợi nhuận', 'Số lượng']
-    //             });
-    //         } else {
-                
-    //             button.text("Chế độ 1");
-    //             alert(chart.data);
-    //             // Thực hiện các hành động cho chế độ 2
-    //             var chart =  new Morris.Bar({
-    //             element: 'myfirstchart',
-    //             hideHover: 'auto',
-    //             parseTime: false,
-    //             lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#76656'],
-    //             xkey: 'order_date',
-    //             ykeys: ['total_order', 'sales', 'profit', 'quantity'],
-    //             labels: ['Đơn hàng', 'Doanh số', 'Lợi nhuận', 'Số lượng']
-    //             });
-    //         }
-            
-    // });
+// Hàm format số
+function number_format(number) {
+    return number.toLocaleString('vi-VN');
+}
+
+// Mặc định tháng này
+loadData('month');
+
+// Nút preset
+$('.button-group button').click(function() {
+    $('.button-group button').removeClass('active');
+    $(this).addClass('active');
+    var range = $(this).data('range');
+    loadData(range);
+});
 </script>
+
+</body>
 </html>
-
-
-
-

@@ -1,10 +1,10 @@
 <?php
        include '../../lib/session.php';
-       include '../../models/categories.php';
+       include '../../models/categories.php';// kiểm tra file có tồn tại hay ko
         Session ::checkSession('admin');
-        $role_id = Session::get('role_id');
-       if ($role_id == 1) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+        $role_id = Session::get('role_id');// kiểm tra người dùng đã đăng nhập với vai trò admin chưa. Nếu chưa, có thể tự động chuyển hướng hoặc báo lỗi.
+       if ($role_id == 1) {//Nếu $role_id == 1 → nghĩa là admin → cho phép tiếp tục.
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {//Form gửi bằng phương thức POST.  //Có tồn tại $_POST['submit'] (nút submit được nhấn).
         $category = new categories();
         $result = $category->insert($_POST['name']);
     }

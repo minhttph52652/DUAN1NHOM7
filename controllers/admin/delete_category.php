@@ -3,8 +3,8 @@
   include '../../models/product.php';
      Session::checkSession('admin');
   include '../../models/categories.php';
-    Session::checkSession('admin');
-    $role_id = Session::get('role_id');
+    Session::checkSession('admin');// Kiểm tra quyền truy cập
+    $role_id = Session::get('role_id');// Lấy ID vai trò
      if( isset($_GET['id'])){
            $c = new categories();
            $result = $c->delete($_GET['id']);// hiện lên sản phẩm theo id

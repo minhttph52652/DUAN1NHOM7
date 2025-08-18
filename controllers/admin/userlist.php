@@ -9,16 +9,16 @@ if ($role_id == 1) {
     header("Location:../../index.php");
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $user = new user();
-    if (isset($_POST['block'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {// Kiểm tra phương thức yêu cầu
+    $user = new user();// Khởi tạo đối tượng user
+    if (isset($_POST['block'])) {// Kiểm tra xem có yêu cầu khóa người dùng không
         $result = $user->block($_POST['id']);
         if ($result) {
             echo '<script type="text/javascript">alert("Khóa người dùng thành công!");</script>';
         } else {
             echo '<script type="text/javascript">alert("Khóa người dùng thất bại!");</script>';
         }
-    } else if (isset($_POST['active'])) {
+    } else if (isset($_POST['active'])) {// Kiểm tra xem có yêu cầu kích hoạt người dùng không
         $result = $user->active($_POST['id']);
         if ($result) {
             echo '<script type="text/javascript">alert("Kích hoạt người dùng thành công!");</script>';
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$user = new user();
-$list = $user->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));
+$user = new user();// Khởi tạo đối tượng user
+$list = $user->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));// Lấy danh sách quản trị viên
 $pageCount = $user->getCountPaging();
 
 if (isset($_GET['search'])) {

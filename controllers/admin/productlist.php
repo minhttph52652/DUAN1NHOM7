@@ -10,10 +10,10 @@ if ($role_id == 1) {
     header("Location:../../index.php");
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $product = new product();
-    if (isset($_POST['block'])) {
-        $result = $product->block($_POST['id']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Kiểm tra phương thức yêu cầu
+    $product = new product();// Khởi tạo đối tượng product
+    if (isset($_POST['block'])) {// Kiểm tra xem có yêu cầu khóa sản phẩm không
+        $result = $product->block($_POST['id']);// Thực hiện khóa sản phẩm
         if ($result) {
             echo '<script type="text/javascript">alert("Khóa sản phẩm thành công!");</script>';
         } else {
@@ -32,12 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$product = new product();
-$list = $product->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));
-$pageCount = $product->getCountPaging();
+$product = new product();// Khởi tạo đối tượng product
+$list = $product->getAllAdmin((isset($_GET['page']) ? $_GET['page'] : 1));// Lấy danh sách sản phẩm
+$pageCount = $product->getCountPaging();// Lấy tổng số trang
 
-if (isset($_GET['search'])) {
-    $search = addslashes($_GET['search']);
+if (isset($_GET['search'])) {// Kiểm tra xem có yêu cầu tìm kiếm không
+    $search = addslashes($_GET['search']);// Lấy giá trị tìm kiếm
     if (empty($search)) {
         echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
     } else {

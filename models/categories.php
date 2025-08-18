@@ -8,66 +8,67 @@ include_once($filepath . '/../lib/session.php');
 
 class categories 
 {
-    private $db;
+    private $db;// kết nối đến database
     public function __construct()
     {
          $this->db = new Database();
     }
 
-    public function insert($name) //thêm danh mục 
+    public function insert($name) // thêm danh mục
     {
-         $query = "INSERT INTO categories VALUES (NULL,'" . $name . "',1) ";
-         $result = $this->db->insert($query);
+         $query = "INSERT INTO categories VALUES (NULL,'" . $name . "',1) ";// Thêm danh mục mới
+         $result = $this->db->insert($query);// kết quả truy vấn 
          if ($result) {
-            $alert = "<span class='success'>Thêm danh mục thành công</span>";
+            $alert = "<span class='success'>Thêm danh mục thành công</span>";// thêm thành công
             return $alert;
          }
          else
          {
-             $alert = "<span class='error'>Thêm danh mục thất bại</span>";
+             $alert = "<span class='error'>Thêm danh mục thất bại</span>";// thất bại
              return $alert;
          }
     }
 
-     public function getAllAdmin($page = 1, $total = 8)
+     public function getAllAdmin($page = 1, $total = 8)// Lấy tất cả danh mục cho admin, và phân trang
     {
-        if ($page <= 0) {
-            $page = 1;
+        if ($page <= 0) {// Nếu trang nhỏ hơn hoặc bằng 0 thì gán bằng 1
+            $page = 1;// Gán lại giá trị cho trang
         }
-        $tmp = ($page - 1) * $total;
-        $query = "SELECT * FROM categories limit $tmp,$total";
-        $result = $this->db->select($query);
-        return $result;
+        $tmp = ($page - 1) * $total;// Tính toán vị trí bắt đầu
+        $query = "SELECT * FROM categories limit $tmp,$total";// Lấy danh sách danh mục với phân trang
+        $result = $this->db->select($query);// Kết quả truy vấn
+        return $result;// trả về danh sách danh mục
     }
 
-     public function getAll()
+     public function getAll()// Lấy tất cả danh mục đang hoạt động
     {
         $query = "SELECT * FROM categories WHERE status = 1"; ///ấy toàn bộ danh mục có trạng thái đang hoạt động
-        $result_mysqli = $this->db->select($query);
-        if ($result_mysqli) {
-             $result = mysqli_fetch_all($result_mysqli, MYSQLI_ASSOC);
-            return $result;
+        $result_mysqli = $this->db->select($query);// kết quả truy vấn
+        if ($result_mysqli) {// Nếu có kết quả
+             $result = mysqli_fetch_all($result_mysqli, MYSQLI_ASSOC);// Lấy tất cả danh mục
+            return $result;// trả về danh sách danh mục
         }
-        return false;
+        return false;// Nếu không có kết quả
     }
 
     
     public function getCountPaging($row = 8)//tổng số trang cần có để phân trang toàn bộ danh mục (categories)
     {
-        $query = "SELECT COUNT(*) FROM categories";
-        $mysqli_result = $this->db->select($query);
+        $query = "SELECT COUNT(*) FROM categories";// Lấy tổng số lượng danh mục
+        $mysqli_result = $this->db->select($query);// thực hiện truy vấn
          if ($mysqli_result) {
-            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);
-            $result = ceil($totalrow / $row);
-            return $result;
+            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);// Lấy tổng số lượng danh mục
+            $result = ceil($totalrow / $row);// Tính toán tổng số trang
+            return $result;// trả về tổng số trang
         }
-        return false;
+        return false;// Nếu không có kết quả
     }
 
-     public function update($data)
+     public function update($data)// Cập nhật danh mục
     {
-      $query = "UPDATE categories SET name = '".$data['name']."' WHERE id = '".$data['id']."'";
-      $result = $this->db->update($query);
+      $query = "UPDATE categories SET name = '".$data['name']."' WHERE id = '".$data['id']."'";// Cập nhật thông tin danh mục theo id
+       $query = $this->db->escape_string($query);// Tránh lỗi SQL injection
+      $result = $this->db->update($query);// thực hiện truy vấn
        if ($result) {
             $alert = "<span class='success'>Cập nhật danh mục thành công</span>";
             return $alert;
@@ -77,38 +78,38 @@ class categories
         }
     }
 
-     public function delete($id)
+     public function delete($id)// xóa danh mục theo id
     {
-        $query = "DELETE FROM categories WHERE id = '$id'";
-        $row = $this->db->delete($query);
+        $query = "DELETE FROM categories WHERE id = '$id'";// câu lệnh xóa danh mục theo id
+        $row = $this->db->delete($query);// thực hiện truy vấn
         if ($row) {
-            return true;
+            return true;// trả về true nếu xóa thành công
         }
-        return false;
+        return false;// Nếu không có kết quả
     }
 
     public function getByIdAdmin($id) //Lấy thông tin của một danh mục ADMIN
     {
-        $query = "SELECT * FROM categories WHERE id = '$id'";
-        $result = $this->db->select($query);
-        return $result;
+        $query = "SELECT * FROM categories WHERE id = '$id'";// Lấy thông tin danh mục theo id
+        $result = $this->db->select($query);// thực hiện truy vấn
+        return $result;// trả về thông tin danh mục
     }
 
-     public function getById($id)//client
+     public function getById($id)//Lấy thông tin danh mục theo id
     {
-        $query = "SELECT * FROM categories WHERE id  = '$id' AND status = 1";
-         $mysqli_result = $this->db->select($query);
+        $query = "SELECT * FROM categories WHERE id  = '$id' AND status = 1";// Lấy thông tin danh mục theo id và trạng thái đang hoạt động
+         $mysqli_result = $this->db->select($query);// thực hiện truy vấn
          if ($mysqli_result) {
-            $result = mysqli_fetch_all($this->db->select($query), MYSQLI_ASSOC)[0];
-            return $result;
+            $result = mysqli_fetch_all($this->db->select($query), MYSQLI_ASSOC)[0];// Lấy thông tin danh mục
+            return $result;// trả về thông tin danh mục
          }
-         return false;
+         return false;// Nếu không có kết quả
     }
 
     public function block($id)//"Chặn" hoặc "ẩn" một danh mục (
     {
-        $query = "UPDATE categories SET status = 0 WHERE id = '$id'";
-        $result = $this->db->delete($query);
+        $query = "UPDATE categories SET status = 0 WHERE id = '$id'";// câu lệnh "chặn" hoặc "ẩn" một danh mục
+        $result = $this->db->update($query);// thực hiện truy vấn
         if ($result) {
             return true;
         } else {
@@ -119,8 +120,8 @@ class categories
     
     public function active($id)// Kích hoạt (hiển thị lại) một danh mục
     {
-        $query = "UPDATE categories SET status = 1 WHERE id = '$id'";
-        $result = $this->db->delete($query);
+        $query = "UPDATE categories SET status = 1 WHERE id = '$id'";// câu lệnh "kích hoạt" một danh mục
+        $result = $this->db->update($query);// thực hiện truy vấn
          if ($result) {
             return true;
         } else {

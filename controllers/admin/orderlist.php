@@ -9,11 +9,11 @@
     }
     include '../../models/order.php';
       $order = new order();
-  $processingOrderList = $order->getProcessingOrder();
-$processedOrderList = $order->getProcessedOrder(); // THÊM DÒNG NÀY
-$deliveringOrderList = $order->getDeliveringOrder();
-$completeOrderList =  $order->getCompleteOrder();
-$cancelOrderList = $order->getCancelOrder();
+  $processingOrderList = $order->getProcessingOrder();// Lấy danh sách đơn hàng đang xử lý
+$processedOrderList = $order->getProcessedOrder(); // Lấy danh sách đơn hàng đã xử lý
+$deliveringOrderList = $order->getDeliveringOrder(); // Lấy danh sách đơn hàng đang giao
+$completeOrderList =  $order->getCompleteOrder(); // Lấy danh sách đơn hàng đã hoàn thành
+$cancelOrderList = $order->getCancelOrder(); // Lấy danh sách đơn hàng đã hủy
   ?>
   
 <!DOCTYPE html>

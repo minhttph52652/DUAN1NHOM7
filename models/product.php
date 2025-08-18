@@ -27,10 +27,10 @@ include_once($filepath . '/../lib/session.php');
         $file_name = $_FILES['image']['name'];
         $file_temp = $_FILES['image']['tmp_name'];
 
-        $div = explode('.', $file_name);
-        $file_ext = strtolower(end($div));
-        $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;
-        $uploaded_image = "uploads/" . $unique_image;
+        $div = explode('.', $file_name);// tách tên file thành mảng
+        $file_ext = strtolower(end($div));// lấy phần mở rộng của file
+        $unique_image = substr(md5(time()), 0, 10) . '.' . $file_ext;// tạo tên file hình ảnh duy nhất
+        $uploaded_image = "uploads/" . $unique_image;// đường dẫn đến hình ảnh đã tải lên
 
         move_uploaded_file($file_temp, $uploaded_image);
         $query = "INSERT INTO products VALUES (NULL,'$name','$originalPrice','$promotionPrice','$unique_image'," . Session::get('userId') . ",'" . date('Y/m/d') . "','$cateId','$qty','$des',1,0) ";
@@ -46,37 +46,37 @@ include_once($filepath . '/../lib/session.php');
 
     public function getAllAdmin($page = 1, $total = 8)// lấy danh sách sản phẩm
     {
-        if ($page <= 0) {
-            $page = 1;
+        if ($page <= 0) {// kiểm tra trang
+            $page = 1;// nếu trang nhỏ hơn hoặc bằng 0 thì gán bằng 1
         }
-        $tmp = ($page - 1) * $total;
+        $tmp = ($page - 1) * $total;// tính toán vị trí bắt đầu
         $query =
             "SELECT products.*, categories.name as cateName, users.fullName
 			 FROM products INNER JOIN categories ON products.cateId = categories.id INNER JOIN users ON products.createdBy = users.id
 			 order by products.id desc 
-             limit $tmp,$total";
-        $result = $this->db->select($query);
+             limit $tmp,$total";// giới hạn số lượng sản phẩm hiển thị
+        $result = $this->db->select($query);// thực hiện truy vấn
         return $result;
     }
 
-    public function getAll()
+    public function getAll()// lấy tất cả sản phẩm
     {
         $query =
             "SELECT products.*, categories.name as cateName
 			 FROM products INNER JOIN categories ON products.cateId = categories.id INNER JOIN users ON products.createdBy = users.id
 			 WHERE products.status = 1
-             order by products.id desc ";
-        $result = $this->db->select($query);
+             order by products.id desc ";// câu lệnh lấy tất cả sản phẩm
+        $result = $this->db->select($query);// thực hiện truy vấn
         return $result;
     }
 
-    public function getCountPaging($row = 8)
+    public function getCountPaging($row = 8)// Tính số trang cần thiết để hiển thị sản phẩm (dựa trên $row)
     {
-        $query = "SELECT COUNT(*) FROM products";
-        $mysqli_result = $this->db->select($query);
+        $query = "SELECT COUNT(*) FROM products";// câu lệnh đếm số lượng sản phẩm
+        $mysqli_result = $this->db->select($query);// thực hiện truy vấn
         if ($mysqli_result) {
-            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);
-            $result = ceil($totalrow / $row);//celi làm tròn
+            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);// lấy tổng số sản phẩm
+            $result = ceil($totalrow / $row);// làm tròn
             return $result;
         }
         return false;
@@ -84,11 +84,11 @@ include_once($filepath . '/../lib/session.php');
 
      public function getCountPagingClient($cateId, $row = 8)//Tính số trang cần thiết để hiển thị sản phẩm thuộc một danh mục cụ thể (dựa trên $cateId)
     {
-        $query = "SELECT COUNT(*) FROM products WHERE cateId = $cateId";
-        $mysqli_result = $this->db->select($query);
+        $query = "SELECT COUNT(*) FROM products WHERE cateId = $cateId";// câu lệnh đếm số lượng sản phẩm theo danh mục
+        $mysqli_result = $this->db->select($query);// thực hiện truy vấn
         if ($mysqli_result) {
-            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);
-            $result = ceil($totalrow / $row);
+            $totalrow = intval((mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC)[0])['COUNT(*)']);// lấy tổng số sản phẩm
+            $result = ceil($totalrow / $row);// làm tròn
             return $result;
         }
         return false;
@@ -111,16 +111,16 @@ include_once($filepath . '/../lib/session.php');
             "SELECT products.*, categories.name as cateName, users.fullName
             FROM products INNER JOIN categories ON products.cateId = categories.id INNER JOIN users ON products.createdBy = users.id
 			 WHERE products.name LIKE '%$name_product%' and products.status = 1
-            order by products.id desc";
-        $mysqli_result = $this->db->select($query);
+            order by products.id desc";// câu lệnh tìm kiếm sản phẩm theo tên
+        $mysqli_result = $this->db->select($query);// thực hiện truy vấn
         if ($mysqli_result) {
-            $result = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC);
+            $result = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC);// lấy tất cả kết quả
             return $result;
         }
         return false;
     }
 
-     public function getProductsByCateId($page, $cateId, $total = 8)
+     public function getProductsByCateId($page, $cateId, $total = 8)// Lấy sản phẩm theo danh mục
     {
         if ($page <= 0) {
             $page = 1;
@@ -130,10 +130,10 @@ include_once($filepath . '/../lib/session.php');
             "SELECT *
 			 FROM products
 			 WHERE status = 1 AND cateId = $cateId
-            ";
-        $mysqli_result = $this->db->select($query);
+            ";// sản phẩm theo danh mục
+        $mysqli_result = $this->db->select($query);// thực hiện truy vấn
         if ($mysqli_result) {
-            $result = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC);
+            $result = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC);// lấy tất cả kết quả
             return $result;
         }
         return false;
@@ -198,10 +198,10 @@ include_once($filepath . '/../lib/session.php');
 
     public function getProductbyId($id)// lấy thông tin một sản phẩm (còn hoạt động) dựa theo id
     {
-        $query = "SELECT * FROM products where id = '$id' AND status = 1";
+        $query = "SELECT * FROM products where id = '$id' AND status = 1";// câu lệnh lấy thông tin sản phẩm
         $mysqli_result = $this->db->select($query);
         if ($mysqli_result) {
-            $result = mysqli_fetch_all($this->db->select($query), MYSQLI_ASSOC)[0];
+            $result = mysqli_fetch_all($this->db->select($query), MYSQLI_ASSOC)[0];// lấy thông tin sản phẩm
             return $result;
         }
         return false;
@@ -209,7 +209,7 @@ include_once($filepath . '/../lib/session.php');
 
     public function block($id)//"ẩn" hoặc "khóa" một sản phẩm
     {
-        $query = "UPDATE products SET status = 0 where id = '$id' ";
+        $query = "UPDATE products SET status = 0 where id = '$id' ";// câu lệnh ẩn hoặc khóa sản phẩm
         $result = $this->db->delete($query);
         if ($result) {
             return true;
@@ -220,7 +220,7 @@ include_once($filepath . '/../lib/session.php');
 
     public function delete($id)//xóa vĩnh viễn một sản phẩm khỏi cơ sở dữ liệu theo id
     {
-        $query = "DELETE FROM products WHERE id = $id";
+        $query = "DELETE FROM products WHERE id = $id";// câu lệnh xóa sản phẩm
         $row = $this->db->delete($query);
         if ($row) {
             return true;
@@ -230,7 +230,7 @@ include_once($filepath . '/../lib/session.php');
 
      public function active($id)//kích hoạt lại sản phẩm
     {
-        $query = "UPDATE products SET status = 1 where id = '$id' ";
+        $query = "UPDATE products SET status = 1 where id = '$id' ";// câu lệnh kích hoạt lại sản phẩm
         $result = $this->db->delete($query);
         if ($result) {
             return true;
@@ -241,7 +241,7 @@ include_once($filepath . '/../lib/session.php');
 
     public function updateQty($id, $qty)//giảm số lượng (qty) của sản phẩm có id tương ứng
     {
-        $query = "UPDATE products SET qty = qty - $qty WHERE id = $id";
+        $query = "UPDATE products SET qty = qty - $qty WHERE id = $id";// câu lệnh giảm số lượng sản phẩm
         $mysqli_result = $this->db->update($query);
         if ($mysqli_result) {
             return true;
@@ -251,7 +251,7 @@ include_once($filepath . '/../lib/session.php');
 
      public function updateSold($id, $qty)//cập nhật số lượng sản phẩm đã bán
     {
-        $query = "UPDATE products SET soldCount = soldCount + $qty WHERE id = $id";
+        $query = "UPDATE products SET soldCount = soldCount + $qty WHERE id = $id";// câu lệnh cập nhật số lượng sản phẩm đã bán
         $mysqli_result = $this->db->update($query);
         if ($mysqli_result) {
             return true;
@@ -262,17 +262,17 @@ include_once($filepath . '/../lib/session.php');
     public function checkQty($productId)// kiểm tra xem số lượng sản phẩm trong giỏ hàng có vượt quá số lượng tồn kho hay không.
     {
         // Lấy số lượng còn lại trong kho
-        $sql_confirm_qty = "SELECT qty FROM `products` WHERE id = $productId LIMIT 1";
-        $mysqli_result1 = $this->db->select($sql_confirm_qty);
-        $qtyNow = mysqli_fetch_all($mysqli_result1, MYSQLI_ASSOC)[0];
-        $qtyNow1 = array_sum($qtyNow );
+        $sql_confirm_qty = "SELECT qty FROM `products` WHERE id = $productId LIMIT 1";// câu lệnh lấy số lượng còn lại trong kho
+        $mysqli_result1 = $this->db->select($sql_confirm_qty);// thực hiện truy vấn
+        $qtyNow = mysqli_fetch_all($mysqli_result1, MYSQLI_ASSOC)[0];// lấy số lượng còn lại trong kho
+        $qtyNow1 = array_sum($qtyNow );// lấy tổng số lượng còn lại trong kho
         // Lấy số lượng sản phẩm trong giỏ hàng
         $query = "SELECT qty FROM `cart` WHERE productId = $productId LIMIT 1";
-        $mysqli_result2 = $this->db->select($query);
-        $qtyInCart= mysqli_fetch_all($mysqli_result2, MYSQLI_ASSOC)[0];
-        $qtyInCart1 = array_sum($qtyInCart );
+        $mysqli_result2 = $this->db->select($query);// thực hiện truy vấn
+        $qtyInCart= mysqli_fetch_all($mysqli_result2, MYSQLI_ASSOC)[0];// lấy số lượng sản phẩm trong giỏ hàng
+        $qtyInCart1 = array_sum($qtyInCart );// lấy tổng số lượng sản phẩm trong giỏ hàng
 
-        if(intval($qtyInCart1) <= intval($qtyNow1)){
+        if(intval($qtyInCart1) <= intval($qtyNow1)){// kiểm tra số lượng sản phẩm trong giỏ hàng có vượt quá số lượng tồn kho hay không
             return true;
         }
         return false;

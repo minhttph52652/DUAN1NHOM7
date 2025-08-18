@@ -69,22 +69,7 @@ $totalQty = $cart->getTotalQtyByUserId();
             <?php } ?>
         </ul>
     </nav>
-        <section class="banner">
-        <div class="fadein">
-            <?php
-            // display images from directory
-            // directory path
-            $dir = "./images/slider/";
-
-            $scan_dir = scandir($dir);
-            foreach ($scan_dir as $img) :
-                if (in_array($img, array('.', '..')))
-                    continue;
-            ?>
-                <img src="<?php echo $dir . $img ?>" alt="<?php echo $img ?>">
-            <?php endforeach; ?>
-        </div>
-    </section>
+      
     <div class="featuredProducts">
         <h1>Lấy lại mật khẩu</h1>
     </div>
@@ -116,7 +101,7 @@ $totalQty = $cart->getTotalQtyByUserId();
                 <a href="productList.php">Sản Phẩm</a>
             </li>
         </ul>
-        <p class="copyright">copy by IVYmoda.com 2024</p>
+        <p class="copyright">copy by IVYmoda.com 2025</p>
     </footer>
 </body>
 

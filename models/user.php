@@ -215,20 +215,28 @@ class user
 		}
 	}
 
-	public function getUserByOrder($orderId)// Lấy thông tin người dùng theo đơn hàng
-	{
-		$query1 = "SELECT * FROM orders WHERE id = '$orderId'";// câu lệnh lấy thông tin đơn hàng theo ID
-		$mysqli_result1 = $this->db->select($query1);// thực hiện truy vấn
-		$user = $mysqli_result1->fetch_assoc();// lấy thông tin đơn hàng theo ID
-		$userId = $user['userId'];// lấy ID người dùng
-		$query = "SELECT * FROM users WHERE id = $userId LIMIT 1";// câu lệnh lấy thông tin người dùng theo ID
-		$mysqli_result = $this->db->select($query);// thực hiện truy vấn
-		if ($mysqli_result) {
-			$result = mysqli_fetch_all($this->db->select($query), MYSQLI_ASSOC)[0];// lấy thông tin người dùng theo ID
-			return $result;
-		}
-		return false;
-	}
+public function getUserByOrder($orderId) // Lấy thông tin người dùng theo đơn hàng
+{
+    // Lấy đơn hàng theo ID
+    $query1 = "SELECT * FROM orders WHERE id = $orderId";
+    $mysqli_result1 = $this->db->select($query1);
+
+    if ($mysqli_result1 && mysqli_num_rows($mysqli_result1) > 0) {
+        $order = mysqli_fetch_assoc($mysqli_result1); // Lấy thông tin đơn hàng
+        $userId = $order['userId'];
+
+        // Lấy thông tin người dùng
+        $query = "SELECT * FROM users WHERE id = $userId LIMIT 1";
+        $mysqli_result = $this->db->select($query);
+
+        if ($mysqli_result && mysqli_num_rows($mysqli_result) > 0) {
+            return mysqli_fetch_assoc($mysqli_result); // Trả về thông tin user
+        }
+    }
+
+    return false; // Nếu không tìm thấy đơn hàng hoặc user
+}
+
 
 	public function getPassword($email)// Lấy lại mật khẩu người dùng
 	{

@@ -104,7 +104,7 @@ $count = ($page - 1) * $limit + 1; // STT bắt đầu theo trang
                     <th>Giá khuyến mãi</th>
                     <th>Tạo bởi</th>
                     <th>Số lượng</th>
-                    <th>Trạng thái</th>
+                    <!-- <th>Trạng thái</th> -->
                     <th>Thao tác</th>
                 </tr>
                 <?php foreach ($list as $key => $value) { ?>
@@ -116,12 +116,12 @@ $count = ($page - 1) * $limit + 1; // STT bắt đầu theo trang
                         <td><?= number_format($value['promotionPrice'], 0, '', ',') ?> VND</td>
                         <td><?= $value['fullName'] ?></td>
                         <td><?= $value['qty'] ?></td>
-                        <td><?= ($value['status']) ? "Active" : "Block" ?></td>
+                        <!-- <td><?= ($value['status']) ? "Active" : "Block" ?></td> -->
                         <td>
-                         <a href="edit_product.php?productId=<?= $value['id'] ?>">Sửa</a>
-
-                            <span> / </span>
-                            <a href="delete_product.php?id=<?= $value['id'] ?>"> Xóa</a>
+                       <!-- <a href="edit_product.php?productId=<?= $value['id'] ?>">Sửa</a>
+                      <span> / </span> -->
+                   <a href="delete_product.php?productId=<?= $value['id'] ?>">Xóa</a>
+ 
                             <?php
                             if ($value['status']) { ?>
                                 <form action="productlist.php" method="post">

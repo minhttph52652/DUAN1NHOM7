@@ -1,14 +1,30 @@
 <?php
+/**
+ * FILE: edit_info.php
+ * CHỨC NĂNG: Trang chỉnh sửa thông tin cá nhân của user
+ * LUỒNG XỬ LÝ:
+ * 1. Load model user và lấy thông tin hiện tại
+ * 2. Xử lý form POST để cập nhật thông tin
+ * 3. Gọi method update() để lưu thay đổi
+ * 4. Chuyển hướng và hiển thị thông báo kết quả
+ */
+
+// Load model user và lấy thông tin hiện tại của user
 include '../models/user.php';
 $user = new user();
 $userInfo = $user->get();
 
+// Xử lý form POST khi user submit để cập nhật thông tin
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+    // Gọi method update() để cập nhật thông tin cá nhân
     $result = $user->update($_POST);
+    
     if ($result) {
+        // Thành công: Hiển thị thông báo và chuyển hướng
         echo '<script type="text/javascript">alert("Cập nhật thông tin cá nhân thành công!"); history.back();</script>';
         header("Location:./info.php");
     } else {
+        // Thất bại: Hiển thị thông báo lỗi và chuyển hướng
         echo '<script type="text/javascript">alert("Cập nhật thông tin cá nhân thất bại!"); history.back();</script>';
         header("Location:./info.php");
     }
@@ -16,10 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 ?>
 
 <?php
+// Load các model cần thiết cho navigation và giỏ hàng
 include_once '../lib/session.php';
 include_once '../models/product.php';
 include_once '../models/cart.php';
 
+// Khởi tạo đối tượng giỏ hàng và lấy tổng số lượng
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
 ?>
@@ -37,6 +55,8 @@ $totalQty = $cart->getTotalQtyByUserId();
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
     <title>Cập nhật thông tin cá nhân</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
     <script>
         $(function() {
             $('.fadein img:gt(0)').hide();
@@ -48,6 +68,7 @@ $totalQty = $cart->getTotalQtyByUserId();
 </head>
 
 <body>
+<!-- Navigation menu chính -->
 <nav>
         <label class="logo"><a href="index.php">IVY Moda</a></label>
         <ul id="dc_mega-menu-orange">
@@ -57,20 +78,27 @@ $totalQty = $cart->getTotalQtyByUserId();
             <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
                 
             <?php
+            // Hiển thị menu tùy theo trạng thái đăng nhập
             if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+                <!-- Menu khi đã đăng nhập -->
                 <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
                 <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
             <?php } else { ?>
+                <!-- Menu khi chưa đăng nhập -->
                 <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
                 <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
             <?php } ?>
         </ul>
+        
+        <!-- Form tìm kiếm sản phẩm -->
         <form class="c-search" action="" method="get">
             <div class="header_search">
                 <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </div>
         </form>
+        
+        <!-- Icon giỏ hàng với số lượng sản phẩm -->
         <a class="cart" href="checkout.php">
                     <i class="fa fa-shopping-cart"></i>
                     <sup class="sumItem">
@@ -78,11 +106,13 @@ $totalQty = $cart->getTotalQtyByUserId();
                     </sup>
         </a>
     </nav>
+    
+    <!-- Section banner slider hiển thị ảnh từ thư mục slider -->
     <section class="banner">
         <div class="fadein">
             <?php
-            // display images from directory
-            // directory path
+            // Hiển thị ảnh từ thư mục slider
+            // Đường dẫn thư mục
             $dir = "../images/slider/";
 
             $scan_dir = scandir($dir);
@@ -94,9 +124,13 @@ $totalQty = $cart->getTotalQtyByUserId();
             <?php endforeach; ?>
         </div>
     </section>
+    
+    <!-- Header trang chỉnh sửa thông tin cá nhân -->
     <div class="featuredProducts">
         <h1>Chỉnh sửa thông tin cá nhân</b></h1>
     </div>
+    
+    <!-- Container chính chứa form chỉnh sửa thông tin -->
     <div class="container-single">
         
         <div class="login">

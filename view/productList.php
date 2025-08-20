@@ -1,29 +1,46 @@
 <?php
+/**
+ * FILE: productList.php
+ * CHỨC NĂNG: Trang hiển thị danh sách sản phẩm với phân trang và tìm kiếm
+ * LUỒNG XỬ LÝ:
+ * 1. Load các model cần thiết (session, product, categories, cart)
+ * 2. Lấy danh sách sản phẩm theo danh mục và phân trang
+ * 3. Xử lý tìm kiếm sản phẩm theo tên
+ * 4. Hiển thị giao diện danh sách sản phẩm với slider banner
+ */
+
+// Load các model cần thiết
 include_once '../lib/session.php';
 include_once '../models/product.php';
 include_once '../models/categories.php';
 include_once '../models/cart.php';
 
+// Khởi tạo đối tượng giỏ hàng và lấy tổng số lượng
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
 
+// Khởi tạo đối tượng product và lấy dữ liệu
 $product = new product();
+// Lấy danh sách sản phẩm theo danh mục và trang hiện tại
 $list = $product->getProductsByCateId((isset($_GET['page']) ? $_GET['page'] : 1), (isset($_GET['cateId']) ? $_GET['cateId'] : 6));
+// Lấy tổng số trang để phân trang
 $pageCount = $product->getCountPagingClient((isset($_GET['cateId']) ? $_GET['cateId'] : 6));
 
+// Khởi tạo đối tượng categories và lấy tất cả danh mục
 $categories = new categories();
 $categoriesList = $categories->getAll();
-?>
-<?php
-    if (isset($_GET['search'])) {
-        $search = addslashes($_GET['search']);
-        if (empty($search)) {
-            echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
-        } else {
-            $list = $product->getProductByName($search);
-           
-        }
-    } 
+
+// Xử lý tìm kiếm sản phẩm nếu có parameter search
+if (isset($_GET['search'])) {
+    $search = addslashes($_GET['search']);
+    if (empty($search)) {
+        echo '<script type="text/javascript">alert("Yêu cầu dữ liệu không được để trống!");</script>';
+    } else {
+        // Tìm sản phẩm theo tên
+        $list = $product->getProductByName($search);
+       
+    }
+} 
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +56,8 @@ $categoriesList = $categories->getAll();
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
     <title>Danh sách sản phẩm</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
     <script>
         $(function() {
             $('.fadein img:gt(0)').hide();
@@ -50,6 +69,7 @@ $categoriesList = $categories->getAll();
 </head>
 
 <body>
+<!-- Navigation menu chính -->
 <nav>
     <label class="logo"><a href="../index.php">IVY Moda</a></label>
     <ul id="dc_mega-menu-orange">
@@ -58,14 +78,17 @@ $categoriesList = $categories->getAll();
         <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
 
         <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+            <!-- Menu khi đã đăng nhập -->
             <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
             <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
         <?php } else { ?>
+            <!-- Menu khi chưa đăng nhập -->
             <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
             <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
         <?php } ?>
     </ul>
 
+    <!-- Form tìm kiếm sản phẩm -->
     <form class="c-search" action="" method="get">
         <div class="header_search">
             <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
@@ -73,6 +96,7 @@ $categoriesList = $categories->getAll();
         </div>
     </form>
 
+    <!-- Icon giỏ hàng với số lượng sản phẩm -->
     <a class="cart" href="checkout.php">
         <i class="fa fa-shopping-cart"></i>
         <sup class="sumItem">
@@ -81,11 +105,12 @@ $categoriesList = $categories->getAll();
     </a>
 </nav>
 
+    <!-- Section banner slider hiển thị ảnh từ thư mục slider -->
     <section class="banner">
         <div class="fadein">
             <?php
-            // display images from directory
-            // directory path
+            // Hiển thị ảnh từ thư mục slider
+            // Đường dẫn thư mục
             $dir = "../images/slider/";
 
             $scan_dir = scandir($dir);

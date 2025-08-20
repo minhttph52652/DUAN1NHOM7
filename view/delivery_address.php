@@ -1,12 +1,27 @@
-<<?php
+<?php
+/**
+ * FILE: delivery_address.php
+ * CHỨC NĂNG: Trang nhập địa chỉ giao hàng cho đơn hàng
+ * LUỒNG XỬ LÝ:
+ * 1. Load session và kiểm tra đăng nhập client
+ * 2. Lấy thông tin giỏ hàng và đơn hàng của user
+ * 3. Hiển thị form nhập thông tin giao hàng
+ * 4. Xử lý validation số điện thoại
+ */
+
+// Load session và kiểm tra đăng nhập client
 include_once '../lib/session.php';
 Session::checkSession('client');
+
+// Load các model cần thiết
 include '../models/order.php';
 include_once '../models/cart.php';
 
+// Khởi tạo đối tượng giỏ hàng và lấy tổng số lượng
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
 
+// Khởi tạo đối tượng order và lấy thông tin đơn hàng của user
 $order = new order();
 $result = $order->getOrderByUser();
 
@@ -24,6 +39,8 @@ $result = $order->getOrderByUser();
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
     <title>Checkout</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
     <script>
         $(function() {
             $('.fadein img:gt(0)').hide();
@@ -35,6 +52,7 @@ $result = $order->getOrderByUser();
 </head>
 
 <body>
+<!-- Navigation menu chính -->
 <nav>
         <label class="logo"><a href="index.php">IVY Moda</a></label>
         <ul>
@@ -43,6 +61,7 @@ $result = $order->getOrderByUser();
 
             <li><a href="order.php" id="order">Đơn hàng</a></li>
             <li>
+                <!-- Icon giỏ hàng với số lượng sản phẩm -->
                 <a href="checkout.php">
                     Giỏ hàng
                     <i class="fa fa-shopping-bag"></i>
@@ -52,21 +71,27 @@ $result = $order->getOrderByUser();
                 </a>
             </li>
             <?php
+            // Hiển thị menu tùy theo trạng thái đăng nhập
             if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+                <!-- Menu khi đã đăng nhập -->
                 <li><a href="info.php" id="signin">Thông tin cá nhân</a></li>
                 <li><a href="logout.php" id="signin">Đăng xuất</a></li>
             <?php } else { ?>
+                <!-- Menu khi chưa đăng nhập -->
                 <li><a href="register.php" id="signup">Đăng ký</a></li>
                 <li><a href="login.php" id="signin">Đăng nhập</a></li>
             <?php } ?>
         </ul>
     </nav>
+    
+    <!-- Container chính chứa form địa chỉ giao hàng -->
     <div class="deliveryContainer">
     <div class="nhanHang">
         <h1>Địa chỉ nhận hàng</h1>
     </div>
     <div class="container-single">
     <div class="infor_man">
+            <!-- Form nhập thông tin giao hàng -->
             <form action="add_order.php" method="post" class="form-login">
                 <label for="fullName">Họ tên người nhận</label>
                 <input type="text" id="fullName" name="fullName" placeholder="Họ tên..." required>
@@ -84,6 +109,7 @@ $result = $order->getOrderByUser();
     </div>
 
     
+    <!-- Footer -->
     <footer>
         <div class="social">
             <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
@@ -102,7 +128,12 @@ $result = $order->getOrderByUser();
     </footer>
     </body>
 
+    <!-- Script validation số điện thoại -->
     <script>
+    /**
+     * Hàm kiểm tra định dạng số điện thoại
+     * Yêu cầu: 10 chữ số
+     */
     function validatePhoneNumber(input) {
         var phoneNumber = input.value;
         var regex = /^[0-9]{10}$/;

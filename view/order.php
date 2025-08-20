@@ -1,13 +1,27 @@
 <?php
+/**
+ * FILE: order.php
+ * CHỨC NĂNG: Trang hiển thị danh sách đơn hàng của user
+ * LUỒNG XỬ LÝ:
+ * 1. Kiểm tra session đăng nhập của client
+ * 2. Load các model cần thiết (order, cart)
+ * 3. Lấy danh sách đơn hàng của user hiện tại
+ * 4. Hiển thị giao diện danh sách đơn hàng với các trạng thái khác nhau
+ */
+
+// Load session và kiểm tra đăng nhập client
 include_once __DIR__ . '/../lib/session.php';
 Session::checkSession('client');
 
+// Load các model cần thiết
 include_once __DIR__ . '/../models/order.php';
 include_once __DIR__ . '/../models/cart.php';
 
+// Khởi tạo đối tượng giỏ hàng và lấy tổng số lượng
 $cart = new cart();
 $totalQty = $cart->getTotalQtyByUserId();
 
+// Khởi tạo đối tượng order và lấy danh sách đơn hàng của user
 $order = new order();
 $result = $order->getOrderByUser();
 ?>
@@ -23,6 +37,8 @@ $result = $order->getOrderByUser();
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
     <title>Order</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
     <script>
         $(function() {
             $('.fadein img:gt(0)').hide();
@@ -34,6 +50,7 @@ $result = $order->getOrderByUser();
 </head>
 
 <body>
+<!-- Navigation menu chính -->
 <nav>
     <label class="logo"><a href="../index.php">IVY Moda</a></label>
     <ul id="dc_mega-menu-orange">
@@ -42,14 +59,17 @@ $result = $order->getOrderByUser();
         <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
 
         <?php if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+            <!-- Menu khi đã đăng nhập -->
             <li class="li-index"><a href="info.php" id="signin">Thông tin cá nhân</a></li>
             <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
         <?php } else { ?>
+            <!-- Menu khi chưa đăng nhập -->
             <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
             <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
         <?php } ?>
     </ul>
 
+    <!-- Form tìm kiếm sản phẩm -->
     <form class="c-search" action="" method="get">
         <div class="header_search">
             <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
@@ -57,6 +77,7 @@ $result = $order->getOrderByUser();
         </div>
     </form>
 
+    <!-- Icon giỏ hàng với số lượng sản phẩm -->
     <a class="cart" href="checkout.php">
         <i class="fa fa-shopping-cart"></i>
         <sup class="sumItem">
@@ -65,17 +86,19 @@ $result = $order->getOrderByUser();
     </a>
 </nav>
 
-
-
-
 <hr style="margin: 122px 177px -102px 177px;color: black;border: 1px solid;">
+
+<!-- Header trang đơn hàng -->
 <div class="orderFeature">
     <h1>Đơn hàng</h1>
 </div>
+
 <hr style="margin: 0px 177px 0 177px;color: black;border: 1px solid;">
 
+<!-- Container chính hiển thị danh sách đơn hàng -->
 <div class="container-single">
     <?php if ($result) { ?>
+        <!-- Bảng hiển thị danh sách đơn hàng -->
         <table class="order orderDetail">
             <tr>
                 <th>STT</th>
@@ -86,17 +109,20 @@ $result = $order->getOrderByUser();
                 <th>Thao tác</th>
             </tr>
             <?php $count = 1;
+            // Duyệt qua từng đơn hàng để hiển thị
             foreach ($result as $value) { ?>
                 <tr>
                     <td><?= $count++ ?></td>
                     <td><?= $value['id'] ?></td>
                     <td><?= $value['createdDate'] ?></td>
                     <td>
+                        <!-- Hiển thị ngày giao dựa trên trạng thái đơn hàng -->
                         <?= ($value['status'] == "Cancel" || $value['status'] == "Spam") ? "" : (($value['status'] != "Processing") ? $value['receivedDate'] : "Dự kiến 3 ngày sau khi đơn hàng đã được xử lý") ?>
                         <?= ($value['status'] != "Processed") ? "" : " (Dự kiến)" ?>
                     </td>
                     <?php if ($value['status'] == 'Delivered') { ?>
                         <td>
+                            <!-- Link để xác nhận đã nhận hàng -->
                             <a href="../views/complete_order.php?orderId=<?= $value['id'] ?>">Đang giao (Click để xác nhận)</a>
                         </td>
                         <td>

@@ -1,47 +1,65 @@
-< <?php
+<?php
+/**
+ * FILE: orderDetail.php
+ * CHỨC NĂNG: Trang hiển thị chi tiết đơn hàng với chức năng in hóa đơn PDF
+ * LUỒNG XỬ LÝ:
+ * 1. Kiểm tra session đăng nhập của client
+ * 2. Load các model cần thiết (cart, orderDetails, order, user)
+ * 3. Lấy chi tiết đơn hàng theo orderId từ URL
+ * 4. Xử lý in hóa đơn PDF khi user click nút in
+ * 5. Hiển thị giao diện chi tiết đơn hàng
+ */
+
+// Load session và kiểm tra đăng nhập client
 include_once '../lib/session.php';
 Session::checkSession('client');
+
+// Load các model cần thiết
 include_once '../models/cart.php';
 include_once '../models/orderDetails.php';
 include_once '../models/order.php';
 
+// Khởi tạo các đối tượng cần thiết
 $cart = new cart();
 $orderDetails = new orderDetails();
 
+// Lấy thông tin giỏ hàng và chi tiết đơn hàng
 $totalQty = $cart->getTotalQtyByUserId();
 $totalQty1 = $cart->getTotalQtyByUserId();
 $result = $orderDetails->getOrderDetails($_GET['orderId']);
 
+// Load model user và lấy thông tin
 include_once '../models/user.php';
 $totalPrice = $orderDetails->getTotalPriceByUserId($_GET['orderId']);
 $totalQty = $orderDetails->getTotalQtyByUserId($_GET['orderId']);
 $user = new user();
 $userInfo = $user->get();
 
+// Lấy thông tin đơn hàng
 $order = new order();
 $order_result = $order->getById($result[0]['orderId']);
 
-	// Include TCPDF library
+// Include thư viện TCPDF để tạo file PDF
 require_once '../lib/TCPDF-main/tcpdf.php';
-	
 
-// Check if the print button is clicked
+// Xử lý khi user click nút in hóa đơn
 if (isset($_POST['print_invoice'])) {
-	ob_start();
-    // Create a new PDF instance
+    ob_start();
+    
+    // Tạo instance PDF mới
     $pdf = new TCPDF();
 
-    // Add a page to the PDF
+    // Thêm trang vào PDF
     $pdf->AddPage();
 
-    // Set font
+    // Thiết lập font
     $pdf->SetFont('dejavusans', '', 12);
 
-    // Add content to the PDF
+    // Thêm nội dung vào PDF
     $pdf->Write(10, 'Thông tin đơn đặt hàng:');
-    $pdf->Ln(); // Add a new line
+    $pdf->Ln(); // Thêm dòng mới
 
-    // Add order information
+    // Thêm thông tin đơn hàng
     $pdf->Write(8, 'Người đặt hàng: ' . $userInfo['fullname']);
     $pdf->Ln();
     $pdf->Write(8, 'Người nhận hàng: ' . $order_result['fullname']);
@@ -55,27 +73,32 @@ if (isset($_POST['print_invoice'])) {
     $pdf->Write(8, 'Địa chỉ nhận hàng: ' . $order_result['address']);
     $pdf->Ln();
 
-    // Add product details
+    // Thêm chi tiết sản phẩm
     $pdf->Write(10, 'Chi tiết sản phẩm:');
-    $pdf->Ln(); // Add a new line
+    $pdf->Ln(); // Thêm dòng mới
 
+    // Thiết lập màu cho header bảng
     $pdf->SetFillColor(200, 220, 255);
     $pdf->SetTextColor(0);
 
+    // Tạo header bảng
     $pdf->Cell(20, 10, 'STT', 1, 0, 'C', 1);
     $pdf->Cell(120, 10, 'Tên sản phẩm', 1, 0, 'C', 1);
     $pdf->Cell(40, 10, 'Đơn giá', 1, 0, 'C', 1);
     $pdf->Cell(20, 10, 'Số lượng', 1, 0, 'C', 1);
-    $pdf->Ln(); // Add a new line
-	$count = 1;
+    $pdf->Ln(); // Thêm dòng mới
+    
+    // Duyệt qua từng sản phẩm để thêm vào PDF
+    $count = 1;
     foreach ($result as $key => $value) {
-    $pdf->Cell(20, 10, $count++, 1);
-    $pdf->Cell(120, 10, $value['productName'], 1);
-    $pdf->Cell(40, 10, number_format($value['productPrice'], 0, '', ',') . 'VND', 1);
-    $pdf->Cell(20, 10, $value['qty'], 1);
-    $pdf->Ln(); // Add a new line
-}
-    // Output the PDF to the browser
+        $pdf->Cell(20, 10, $count++, 1);
+        $pdf->Cell(120, 10, $value['productName'], 1);
+        $pdf->Cell(40, 10, number_format($value['productPrice'], 0, '', ',') . 'VND', 1);
+        $pdf->Cell(20, 10, $value['qty'], 1);
+        $pdf->Ln(); // Thêm dòng mới
+    }
+    
+    // Output PDF ra browser (đã comment để không tự động download)
     // $pdf->Output('hoa_don.pdf', 'D');
     // ob_end_flush();
 }
@@ -93,7 +116,8 @@ if (isset($_POST['print_invoice'])) {
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
     <title>Order</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
     <script>
         $(function() {
             $('.fadein img:gt(0)').hide();
@@ -102,7 +126,6 @@ if (isset($_POST['print_invoice'])) {
             }, 5000);
         });
     </script>
-
 </head>
 
 <body>

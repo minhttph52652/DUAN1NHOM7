@@ -1,103 +1,133 @@
-    <?php
+<?php
+/**
+ * FILE: info.php
+ * CHỨC NĂNG: Trang hiển thị thông tin cá nhân của user
+ * LUỒNG XỬ LÝ:
+ * 1. Load các model cần thiết (session, product, cart, user)
+ * 2. Lấy thông tin cá nhân của user hiện tại
+ * 3. Lấy thông tin giỏ hàng để hiển thị số lượng
+ * 4. Hiển thị giao diện thông tin cá nhân với navigation
+ */
 
+// Load các model cần thiết
 include_once __DIR__ . '/../lib/session.php';
 include_once __DIR__ . '/../models/product.php';
 include_once __DIR__ . '/../models/cart.php';
 include_once __DIR__ . '/../models/user.php';
 
+// Khởi tạo đối tượng user và lấy thông tin cá nhân
+$user = new user();
+$userInfo = $user->get();
 
-    $user = new user();
-    $userInfo = $user->get();
+// Khởi tạo đối tượng giỏ hàng và lấy tổng số lượng
+$cart = new cart();
+$totalQty = $cart->getTotalQtyByUserId();
+?>
 
-    $cart = new cart();
-    $totalQty = $cart->getTotalQtyByUserId();
-    ?>
+<!DOCTYPE html>
+<html lang="en">
 
-    <!DOCTYPE html>
-    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://use.fontawesome.com/2145adbb48.js"></script>
+    <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
+    <title>Trang chủ</title>
+    
+    <!-- CSS tùy chỉnh cho trang thông tin cá nhân -->
+    <style>
+        table,
+        tr,
+        td {
+            border: none;
+            /* background-color: #fff; */
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            font-size: 18px;
+        }
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../css/style.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <script src="https://use.fontawesome.com/2145adbb48.js"></script>
-        <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
-        <title>Trang chủ</title>
-        <style>
-            table,
-            tr,
-            td {
-                border: none;
-                /* background-color: #fff; */
-                margin: 0;
-                padding: 0;
-                text-align: left;
-                font-size: 18px;
-            }
+        td {
+            margin: 10px;
+            padding: 10px;
+        }
 
-            td {
-                margin: 10px;
-                padding: 10px;
-            }
+        .container-info {
+            width: 60%;
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+    </style>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    
+    <!-- Script xử lý slider banner tự động chuyển ảnh -->
+    <script>
+        $(function() {
+            $('.fadein img:gt(0)').hide();
+            setInterval(function() {
+                $('.fadein :first-child').fadeOut().next('img').fadeIn().end().appendTo('.fadein');
+            }, 5000);
+        });
+    </script>
+</head>
 
-            .container-info {
-                width: 60%;
-                display: flex;
-                justify-content: center;
-                flex: 1;
-            }
-        </style>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script>
-            $(function() {
-                $('.fadein img:gt(0)').hide();
-                setInterval(function() {
-                    $('.fadein :first-child').fadeOut().next('img').fadeIn().end().appendTo('.fadein');
-                }, 5000);
-            });
-        </script>
-    </head>
+<body>
+<!-- Navigation menu chính -->
+<nav>
+        <label class="logo"><a href="index.php">IVY Moda</a></label>
+        <ul id="dc_mega-menu-orange">
+            <li class="li-index"><a href="index.php" >Trang chủ</a></li>
+            <li class="li-index"><a href="productList.php" >Sản phẩm</a></li>
 
-    <body>
-    <nav>
-            <label class="logo"><a href="index.php">IVY Moda</a></label>
-            <ul id="dc_mega-menu-orange">
-                <li class="li-index"><a href="index.php" >Trang chủ</a></li>
-                <li class="li-index"><a href="productList.php" >Sản phẩm</a></li>
-
-                <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
-                    
-                <?php
-                if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
-                    <li class="li-index"><a href="info.php" id="signin" class="active" >Thông tin cá nhân</a></li>
-                    <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
-                <?php } else { ?>
-                    <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
-                    <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
-                <?php } ?>
-            </ul>
-            <form class="c-search" action="" method="get">
-                <div class="header_search">
-                    <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
-                    <button type="submit"><i class="fas fa-search"></i></button>
-                </div>
-            </form>
-            <a class="cart" href="checkout.php">
-                        <i class="fa fa-shopping-cart"></i>
-                        <sup class="sumItem">
-                            <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
-                        </sup>
-            </a>
-        </nav>
-        <hr style="margin: 122px 177px -102px 177px;color: black;border: 1px solid;">
-        <div class="inforFeature">
-            <h1>Thông tin cá nhân</h1>
-        </div>
-        <hr style="margin: 0px 177px 0 177px;color: black;border: 1px solid;">
-        <div class="container-single-infor">
-            <div class="container-info">
+            <li class="li-index"><a href="order.php" id="order">Đơn hàng</a></li>
+                
+            <?php
+            // Hiển thị menu tùy theo trạng thái đăng nhập
+            if (isset($_SESSION['user']) && $_SESSION['user']) { ?>
+                <!-- Menu khi đã đăng nhập -->
+                <li class="li-index"><a href="info.php" id="signin" class="active" >Thông tin cá nhân</a></li>
+                <li class="li-index"><a href="logout.php" id="signin">Đăng xuất</a></li>
+            <?php } else { ?>
+                <!-- Menu khi chưa đăng nhập -->
+                <li class="li-index"><a href="register.php" id="signup">Đăng ký</a></li>
+                <li class="li-index"><a href="login.php" id="signin">Đăng nhập</a></li>
+            <?php } ?>
+        </ul>
+        
+        <!-- Form tìm kiếm sản phẩm -->
+        <form class="c-search" action="" method="get">
+            <div class="header_search">
+                <input type="text" class="search_input" name="search" placeholder="Nhập tên sản phẩm">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        
+        <!-- Icon giỏ hàng với số lượng sản phẩm -->
+        <a class="cart" href="checkout.php">
+                    <i class="fa fa-shopping-cart"></i>
+                    <sup class="sumItem">
+                        <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
+                    </sup>
+        </a>
+    </nav>
+    
+    <hr style="margin: 122px 177px -102px 177px;color: black;border: 1px solid;">
+    
+    <!-- Header trang thông tin cá nhân -->
+    <div class="inforFeature">
+        <h1>Thông tin cá nhân</h1>
+    </div>
+    
+    <hr style="margin: 0px 177px 0 177px;color: black;border: 1px solid;">
+    
+    <!-- Container chính chứa thông tin cá nhân -->
+    <div class="container-single-infor">
+        <div class="container-info">
                 <div class="image-info">
                     <img src="./images/avt.png" alt="">
                 </div>
